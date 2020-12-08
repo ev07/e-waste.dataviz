@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 ## Projet de visualisation 2020/2021
 
 ### Esquisses
