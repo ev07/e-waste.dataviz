@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+    .polygon {
+      stroke: rgb(138, 138, 138);
+    }
+    body {
+      margin: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    .Titlecontainer {
+      display: flex;
+      justify-content: center;
+    }
+    .Explanationcontainer {
+      margin-left: 20px;
+      padding-left: 20px;
+    }
+    .Mapcontainer {
+      margin-left: 20px;
+      float: left;
+    }
+    .Graphcontainer {
+      float: left;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="Titlecontainer">
+    <h1>Titre introductif</h1>
+  </div>
+  <div class="Explanationcontainer">
+    <p>
+      Il est possible de visualiser les indicateurs pour chaque pays. Pour cela,
+      il faut cliquer sur le pays d'intérêt sur la carte.
+    </p>
+  </div>
+  <div class="Mapcontainer"></div>
+  <div class="Graphcontainer"></div>
+  <script>
+    //
+    //   PARTIE CARTE
+    //
+
+    var Mwidth = 700,
+      Mheight = 500;
+    var Msvg = d3
+      .select(".Mapcontainer")
+      .append("svg")
+      .attr("width", Mwidth)
+      .attr("height", Mheight);
+
+    // On rajoute un groupe englobant toute la visualisation pour plus tard
+    var g = Msvg.append("g");
+
+    var projection = d3
+      //.geoConicConformal()
+      .geoMercator()
+      .translate([Mwidth / 2, Mheight / 2])
+      .scale([500])
+      .center([15.454071, 50.0])
+      .scale(650);
+
+    var path = d3.geoPath().projection(projection);
+    var color = d3
+      .scaleQuantize()
+      .range(["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"]);
+
+    d3.json("./data/european-union-countries.geojson").then(function (
+      jsondata
+    ) {
+      g.selectAll("path")
+        .data(jsondata.features)
+        .enter()
+        .append("path")
+        .attr("fill", "#ccc")
+        .attr("d", path)
+        .attr("class", "polygon");
+    });
+
+    //
+    //   PARTIE GRAPHES ANNEXES
+    //
+
+    var Gwidth = 200,
+      Gheight = 500;
+    var Gsvg = d3
+      .select(".Graphcontainer")
+      .append("svg")
+      .attr("width", Gwidth)
+      .attr("height", Gheight)
+      .style("background-color", "green"); //juste pour voir
+  </script>
+</body>
+
