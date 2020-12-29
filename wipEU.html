@@ -151,7 +151,7 @@
     var unit = "KG_HAB";
     var wst_oper = "COL";
 
-    d3.json("./data/expl.json").then(function (expldata) {
+    d3.json("./data/explanation.json").then(function (expldata) {
       var expltype = expldata.type;
       d3.selectAll("input[name='ProductType']").on("change", function (event) {
         for (var i = 0; i < expltype.length; i++) {
