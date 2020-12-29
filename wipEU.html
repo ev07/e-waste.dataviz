@@ -6,6 +6,24 @@
     .polygon {
       stroke: rgb(138, 138, 138);
     }
+    .pathhidden {
+      fill-opacity: 0;
+      stroke-opacity: 0;
+      stroke-width: 2px;
+      stroke: rgb(0, 0, 25);
+    }
+    .pathhidden:hover {
+      stroke-opacity: 1;
+    }
+    .tooltip {
+      opacity: 0;
+      background-color: "white";
+      border: "solid";
+      border-width: "2px";
+      border-radius: "5px";
+      padding: "5px";
+      position: absolute;
+    }
     body {
       margin: 0;
       position: fixed;
@@ -13,6 +31,7 @@
       right: 0;
       bottom: 0;
       left: 0;
+      overflow-y: scroll;
     }
     .Titlecontainer {
       display: flex;
@@ -83,15 +102,65 @@
       <input type="radio" id="EE_TLS" name="ProductType" value="EE_TLS" />
       <label for="EE_TLS"> Jouets, équipements de loisirs et de sport</label>
     </div>
+
+    <p>Choisissez l'étape du traitement:</p>
+    <div>
+      <input type="radio" id="MKT" name="ProductStep" value="MKT" checked />
+      <label for="MKT"> Quantité mise sur le marché</label>
+    </div>
+    <div>
+      <input type="radio" id="COL" name="ProductStep" value="COL" />
+      <label for="COL"> Quantité collectée comme déchêt</label>
+    </div>
+    <div>
+      <input type="radio" id="RCY_REU" name="ProductStep" value="RCY_REU" />
+      <label for="RCY_REU">
+        Quantité recyclée ou partiellement réutilisée</label
+      >
+    </div>
+    <div>
+      <input type="radio" id="RCV" name="ProductStep" value="RCV" />
+      <label for="RCV"> Quantité valorisée en énergie</label>
+    </div>
+    <div>
+      <input type="radio" id="REU" name="ProductStep" value="REU" />
+      <label for="REU"> Quantité réparée et réutilisée</label>
+    </div>
   </div>
 
   <div class="Mapcontainer"></div>
   <div class="Graphcontainer"></div>
 
+  <!--div pour mettre l'explication de sélection-->
+	<div>
+		<h3>Type de produits concernés : </h3>
+		<div id="expltextdiv"></div>
+	<div>
+  <!--div pour voir si le lien marche-->
+  <div id="foo">foo</div>
+
   <script>
     //
     //   PARTIE SELECTION DES ATTRIBUTS
     //
+
+    var waste = d3
+      .select('input[name="ProductType"]:checked')
+      .property("value");
+    var year = "2018";
+    var unit = "KG_HAB";
+    var wst_oper = "COL";
+
+    d3.json("./data/expl.json").then(function (expldata) {
+      var expltype = expldata.type;
+      d3.selectAll("input[name='ProductType']").on("change", function (event) {
+        for (var i = 0; i < expltype.length; i++) {
+          if (expltype[i].label == this.value) {
+            d3.select("#expltextdiv").text(expltype[i].text);
+          }
+        }
+      });
+    });
 
     //
     //   PARTIE CARTE
@@ -121,9 +190,10 @@
       .scaleQuantize()
       .range(["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"]);
 
-    d3.json("./data/european-union-countries.geojson").then(function (
-      jsondata
-    ) {
+    d3.json(
+      "./data/european-union-countries.geojson"
+    ).then(function (jsondata) {
+      //polygones principaux
       g.selectAll("path")
         .data(jsondata.features)
         .enter()
@@ -131,6 +201,17 @@
         .attr("fill", "#ccc")
         .attr("d", path)
         .attr("class", "polygon");
+
+      //polygones transparents pour le réhaussement de contours
+      //ajout d'un lien vers la visu par pays
+      g.selectAll("pathh")
+        .data(jsondata.features)
+        .enter()
+        .append("a")
+        .attr("xlink:href", "#foo")
+        .append("path")
+        .attr("d", path)
+        .attr("class", "pathhidden");
     });
 
     //

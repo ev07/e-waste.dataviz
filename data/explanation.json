@@ -1,0 +1,41 @@
+{
+  "type":[
+    {
+      "label":"EE_LHA",
+      "text":"Réfrigirateurs, lave-linges, cuisinières, fours à micro ondes, appareils de chauffage électriques, ventilateurs"
+    },{
+      "label":"EE_SHA",
+      "text":"Aspirateurs, appareils de couture, fers à repasser, grille-pains, couteaux électriques, balances, horloges, sèche-cheveux"
+    },{
+      "label":"EE_ITT",
+      "text":"Ordinateurs, imprimantes, téléphones, calculatrices, scanners"
+    },{
+      "label":"EE_CPV_CON",
+      "text":"Postes de radio, postes de télévision, caméscopes, magnétoscopes, chaines HiFi, instruments de musique, tout autre équipement de transmission/transformation de son/image."
+    },{
+      "label":"EE_TLS",
+      "text":"Jouets et appareils de modélisme comportant des composants électroniques, jeux vidéos et consoles, équipements de sport"
+    },{
+      "label":"TOTAL",
+      "text":"Total toutes catégories"
+    }
+  ],
+  "step":[
+    {
+      "label":"MKT",
+      "text":"La quantité mise sur le marché est celle déclarée par les vendeurs et producteurs. A défaut, elle est estimée à partir de la balance commerciale Imports - Exports + Production domestique."
+      },{
+      "label":"COL",
+      "text":"La quantité collectés est celle déclarée par les services et entreprises de collection de déchêts."
+      },{
+      "label":"RCY_REU",
+      "text":"Cette catégorie comprend les déchets recyclés et réutilisés. Selon le vocabulaire définit par l'Union Européenne, le recyclage est la transformation du déchêt en matières premières. La réutilisation est l'extraction de composants, sans transformation à l'échelle des matériaux."
+      },{
+      "label":"REU",
+      "text":"Cette catégorie concerne les produits réparés pour être remis sur le marché sous forme identique au produit original. Les équipements récupérés sous garantie par exemple peuvent entrer dans cette catégorie"
+      },{
+      "label":"RCV",
+      "text":"Cette catégorie concerne les déchêts valorisés sous forme d'énergie. Intervient généralement lorsque les matériaux ne sont ni recyclable ni réutilisables."
+    }
+  ]
+}
