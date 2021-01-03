@@ -20,14 +20,8 @@
 			.pathhidden:hover {
 				stroke-opacity: 1;
 			}
-			.tooltip {
-				opacity: 0;
-				background-color: "white";
-				border: "solid";
-				border-width: "2px";
-				border-radius: "5px";
-				padding: "5px";
-				position: absolute;
+			.hidden {
+				display: none;
 			}
 			.wrapper {
 			    display: grid;
@@ -45,7 +39,7 @@
 			.Selectioncontainer {
 				padding: 5px;
 				grid-column: 1;
-  			    grid-row: 1;
+  		        grid-row: 1;
 				border-style: solid;
                 border-width: 1px;
 			}
@@ -162,7 +156,22 @@
 		</div> 
 		
     <script>
+
 			//
+			// Utilitaire
+			//
+
+			//récupérer la position d'un élément dans la page
+			function getNodePos(el){
+    		var body = d3.select('body').node();
+
+    		for (var lx = 0, ly = 0;
+          el != null && el != body;
+       	  lx += (el.offsetLeft || el.clientLeft), ly += (el.offsetTop || el.clientTop), el = (el.offsetParent || el.parentNode));
+    		return {x: lx, y: ly};
+			}
+
+		//
     //   PARTIE SELECTION DES ATTRIBUTS
     //
 
@@ -172,7 +181,7 @@
 		var wst_oper = d3
       .select('input[name="ProductStep"]:checked')
       .property("value");
-		var year = "2018";
+		var year = "2017";
     var unit = "KG_HAB";
 
     d3.json("https://ev07.github.io/e-waste.dataviz/data/explanation.json").then(function (expldata) {
@@ -228,9 +237,20 @@
       .scaleQuantize()
       .range(["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"]);
 
+		d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
     d3.json(
       "https://ev07.github.io/e-waste.dataviz/data/european-union-countries.geojson"
     ).then(function (jsondata) {
+			//ajouter un attribut pour la valeur affichée.
+			for (var i = 0; i < jsondata.features.length; i++) {
+  			var countryID = jsondata.features[i].properties.wb_a2;
+				for (var j = 0; j < csvdata.length; j++) {
+					if (csvdata[j].waste == waste && csvdata[j].wst_oper == wst_oper && csvdata[j].countryID == countryID) {
+						jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2017;
+					}
+				}
+			};
+
       //polygones principaux
       g.selectAll("path")
         .data(jsondata.features)
@@ -240,17 +260,47 @@
         .attr("d", path)
         .attr("class", "polygon");
 
+			// On rajoute un tooltip
+			var tooltip = d3.select('.Mapcontainer').append('div')
+			      .attr('class', 'hidden tooltip');
+
+
+
       //polygones transparents pour le réhaussement de contours
       //ajout d'un lien vers la visu par pays
-      g.selectAll("pathh")
+      
+			g.selectAll("pathh")
         .data(jsondata.features)
         .enter()
         .append("a")
         .attr("xlink:href", "#foo")
         .append("path")
         .attr("d", path)
-        .attr("class", "pathhidden");
-    });
+        .attr("class", "pathhidden")
+				//tooltip modif
+				.on('mouseover', function(event, d) {
+          var mousePosition = d3.pointer(event);
+					var svgPosition = getNodePos(d3.select("svg").node())
+          
+					//récupérer la quantité
+					var val = d.properties.mydisplayvalue
+
+					//modifier le tooltip
+					tooltip.classed("hidden", false)
+  		      .attr("style",
+                "left:" +
+                  (mousePosition[0] + svgPosition.x + 15) +
+								  "px; top:" +
+                 (mousePosition[1] + svgPosition.y + 10) +
+								  "px; opacity: 1")
+            .html("TEST " + val);
+        })
+				.on("mouseout", function () {
+            // on cache le toolip
+            tooltip.classed("hidden", true);
+        });
+    })
+		});
 
     //
     //   PARTIE GRAPHES ANNEXES
