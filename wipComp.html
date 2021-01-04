@@ -6,7 +6,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
-  	<link href="src/styles.css" rel="stylesheet" media="all" type="text/css">
+    <link href="src/styles.css" rel="stylesheet" media="all" type="text/css">
+    <style>
+        div.tooltip {
+            color: #222;
+            background-color: #fff;
+            padding: 0.5em;
+            text-shadow: #f5f5f5 0 1px 0;
+            border-radius: 2px;
+            opacity: 0.9;
+            position: absolute;
+        }
+    </style>
   </head>
 
   <body>
@@ -28,6 +39,12 @@
         </div>
     </div> 
         <script>
+            // Création d'un tooltip
+            var tooltip = d3
+                .select("#visuComp")
+                .append("div")
+                .attr("class", "hidden tooltip");
+
             // Mise en place des axes
             var width = 900,
                 height = 900;
@@ -136,43 +153,81 @@
                             //console.log(csvdata[i].eval(valY))
                             appendCircle(svg,xscale(valX) + 50,yscale(anneeY[j]) + 10);
                         }*/
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[1]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].wst_oper,csvdata[i].y2005,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2006,eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[1]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10 ,yscale(anneeY[1]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[2]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2007,eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[2]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[3]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2008,eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[3]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[4]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2009,eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[4]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[5]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2010,eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[5]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[6]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2011,eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[6]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[7]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2012,eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[7]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[8]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2013,eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[8]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[9]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2014,eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[9]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[10]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2015,eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[10]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[11]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2016,eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[11]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[12]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2017,eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[12]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'black');
-                        appendCircle(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[13]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2018,eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[13]) + 10);
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'black');
                     }
                 }
             });
 
-            function appendCircle(svg,cx, cy) {
+            function appendCircle(svg,op,data,cx, cy) {
                 svg
                     .append("circle")
                     .attr("cx", cx)
                     .attr("cy", cy)
-                    .attr("r", 2);
+                    .attr("r", 3)
+                    .on("mousemove", function (event, d) {
+                        // on recupere la position de la souris
+                        var mousePosition = d3.pointer(event, this);
+                        // on affiche le toolip
+                        if(op == "MKT"){
+                            tooltip
+                                .classed("hidden", false)
+                                // on positionne le tooltip en fonction
+                                // de la position de la souris
+                                .attr(
+                                "style",
+                                "left:" +
+                                    (cx) +
+                                    "px; top:" +
+                                    (cy + 50) +
+                                    "px"
+                                )
+                                .html(data + " kg/hab produit");
+                        } else if (op == "COL"){
+                            tooltip
+                                .classed("hidden", false)
+                                // on positionne le tooltip en fonction
+                                // de la position de la souris
+                                .attr(
+                                "style",
+                                "left:" +
+                                    (cx) +
+                                    "px; top:" +
+                                    (cy + 50) +
+                                    "px"
+                                )
+                                .html(data + " kg/hab collecté");
+                        }
+                    })
+                    .on("mouseout", function () {
+                        // on cache le toolip
+                        tooltip.classed("hidden", true);
+                    });
             }
 
             function drawLine(svg,x1,x2,y1,y2,color){
