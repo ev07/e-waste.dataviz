@@ -45,7 +45,7 @@
                 .append("div")
                 .attr("class", "hidden tooltip");
 
-            // Mise en place des axes
+            // Définition de la taille
             var width = 900,
                 height = 900;
 
@@ -70,26 +70,22 @@
                 .attr("width", width)
                 .attr("height", height);
 
+            // Création des axes
             var xscale = d3
-                //.scaleLinear()
                 .scalePoint()
                 .domain(labelX)
                 .range([0, width - 100]);
 
             var yscale = d3
                 .scalePoint()
-                .domain(anneeY /*[1, anneeY.length]*/)
+                .domain(anneeY)
                 .range([height / 2, 0]);
 
             var x_axis = d3.axisBottom(xscale);
             x_axis.tickSize(-height)
-            //x_axis.tickFormat((d, i) => labelX[i]);
 
             var y_axis = d3.axisLeft(yscale);
             y_axis.tickSize(-width + 100)
-            /*y_axis.ticks(anneeY.length);
-            y_axis.tickFormat((d, i) => anneeY[i]);*/
-            //var y_axis = d3.axisLeft().scale(yscale);
 
             svg.append("g").attr("transform", "translate(50, 10)").call(y_axis);
             svg.selectAll(".tick:not(:first-of-type) line").attr("stroke", "black").attr("stroke-dasharray", "2,2");
@@ -104,23 +100,15 @@
                 .attr("transform", "translate(-10,10)rotate(-45)")
                 .style("text-anchor", "end")
                 .style("font-size", 13);
-            //.style("fill", "#69a3b2");
 
-            /*svg
-                .append("circle")
-                .attr("cx", xscale("Petits appareils ménagers") + 50)
-                .attr("cy", yscale("2012") + 10)
-                .attr("r", 2);
-            */
-
-            // 
+            // Affichage des données en fonction du pays
             var paysActuel = "IS";
             d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
                 for (var i = 0; i < csvdata.length; i++) {
                     if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && ( csvdata[i].wst_oper == "COL" || csvdata[i].wst_oper == "MKT")){
                         var valX = "";
                         var op = "";
-                        switch (csvdata[i].waste) {
+                        switch (csvdata[i].waste) { //On vérifie le type du déchet pour l'afficher au bon endroit
                             case 'EE_LHA':
                                 valX = "Gros appareils ménagers";
                                 break;
@@ -143,43 +131,43 @@
                                 console.log(`Problème avec la catégorie de déchet`);
                             }
 
-                        if(csvdata[i].wst_oper == "MKT"){
+                        if(csvdata[i].wst_oper == "MKT"){ //Déchet produit à gauche
                             op = "-";
-                        } else if (csvdata[i].wst_oper == "COL"){
+                        } else if (csvdata[i].wst_oper == "COL"){ // Déchet collecté à droite
                             op = "+";
                         }
-                        /*for(var j = 0; j < anneeY.length ;j++){
-                            var valY = "y"+anneeY[j];
-                            //console.log(csvdata[i].eval(valY))
-                            appendCircle(svg,xscale(valX) + 50,yscale(anneeY[j]) + 10);
-                        }*/
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].wst_oper,csvdata[i].y2005,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
+
+                        // On dessine les points 
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2005,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2006,eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[1]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10 ,yscale(anneeY[1]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2007,eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[2]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2008,eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[3]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2009,eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[4]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2010,eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[5]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2011,eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[6]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2012,eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[7]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2013,eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[8]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2014,eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[9]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2015,eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[10]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2016,eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[11]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2017,eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[12]) + 10);
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'black');
                         appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2018,eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[13]) + 10);
+                    
+                        //On dessine les lignes
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10 ,yscale(anneeY[1]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'black');
                         drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'black');
+
                     }
                 }
             });
@@ -194,11 +182,9 @@
                         // on recupere la position de la souris
                         var mousePosition = d3.pointer(event, this);
                         // on affiche le toolip
-                        if(op == "MKT"){
+                        if(op == "MKT"){ // Pour le déchets produits
                             tooltip
                                 .classed("hidden", false)
-                                // on positionne le tooltip en fonction
-                                // de la position de la souris
                                 .attr(
                                 "style",
                                 "left:" +
@@ -208,11 +194,9 @@
                                     "px"
                                 )
                                 .html(data + " kg/hab produit");
-                        } else if (op == "COL"){
+                        } else if (op == "COL"){ // Pour les déchets collectés
                             tooltip
                                 .classed("hidden", false)
-                                // on positionne le tooltip en fonction
-                                // de la position de la souris
                                 .attr(
                                 "style",
                                 "left:" +
@@ -224,8 +208,7 @@
                                 .html(data + " kg/hab collecté");
                         }
                     })
-                    .on("mouseout", function () {
-                        // on cache le toolip
+                    .on("mouseout", function () { // on cache le toolip
                         tooltip.classed("hidden", true);
                     });
             }
