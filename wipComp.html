@@ -34,11 +34,47 @@
         <div>
             <h1 style="text-align: center;">Titre de la visualisation</h1>
         </div>
+        <div class="container">
+            <h3> Légende </h3>
+            <div id="legendeVisu">
+
+            </div>
+        </div>
         <div id="visuComp">
 
         </div>
     </div> 
         <script>
+            // Création de la légende
+            var svgLeg = d3.select('#legendeVisu')
+                    .append('svg')
+                    .attr("width",900)
+                    .attr("height", 30);
+            svgLeg.append('rect')
+                .attr("x",0)
+                .attr("y",0)
+                .attr("width",20)
+                .attr("height",20)
+                .attr("fill","#d53e4f");
+            
+            svgLeg.append('text')
+                .attr("x",25)
+                .attr("y",15)
+                .text("Déchets produits");
+
+            svgLeg.append('rect')
+                .attr("x",200)
+                .attr("y",0)
+                .attr("width",20)
+                .attr("height",20)
+                .attr("fill","lightGreen");
+            
+            svgLeg.append('text')
+                .attr("x",225)
+                .attr("y",15)
+                .text("Déchets collectés");
+
+
             // Création d'un tooltip
             var tooltip = d3
                 .select("#visuComp")
@@ -222,9 +258,9 @@
                                 .attr(
                                 "style",
                                 "left:" +
-                                    (cx) +
+                                    (mousePosition[0] + 15) +
                                     "px; top:" +
-                                    (cy + 50) +
+                                    (mousePosition[1] - 35) +
                                     "px"
                                 )
                                 .html(data + " kg/hab produit");
@@ -234,9 +270,9 @@
                                 .attr(
                                 "style",
                                 "left:" +
-                                    (cx) +
+                                    (mousePosition[0] + 15) +
                                     "px; top:" +
-                                    (cy + 50) +
+                                    (mousePosition[1] - 35) +
                                     "px"
                                 )
                                 .html(data + " kg/hab collecté");
