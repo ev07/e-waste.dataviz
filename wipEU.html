@@ -33,7 +33,7 @@
 			}
 			.Explanationcontainer {
 			    padding: 5px;
-				grid-column: 4;
+				grid-column: 3;
   			    grid-row: 1;
 			}
 			.Selectioncontainer {
@@ -48,7 +48,7 @@
                 grid-row: 1;
 			}
 			.Graphcontainer {
-				grid-column: 3;
+				grid-column: 4;
                 grid-row: 1;
 			}
 		</style>
@@ -173,7 +173,12 @@
 
 		//
     //   PARTIE SELECTION DES ATTRIBUTS
-    //
+		//
+
+		d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
+		d3.json("https://ev07.github.io/e-waste.dataviz/data/european-union-countries.geojson").then(function (jsondata) {
+		d3.json("https://ev07.github.io/e-waste.dataviz/data/explanation.json").then(function (expldata) {
+      
 
     var waste = d3
       .select('input[name="ProductType"]:checked')
@@ -183,31 +188,31 @@
       .property("value");
 		var year = "2017";
     var unit = "KG_HAB";
+		
 
-    d3.json("https://ev07.github.io/e-waste.dataviz/data/explanation.json").then(function (expldata) {
-      var expltype = expldata.type;
-      d3.selectAll("input[name='ProductType']").on("change", function (event) {
-        //update variable de type
-				waste=this.value
-				//update div d'explication
-				for (var i = 0; i < expltype.length; i++) {
-          if (expltype[i].label == this.value) {
-            d3.select("#expltextdivtype").text(expltype[i].text);
-          }
-        }
-      });
-			var explstep = expldata.step;
-      d3.selectAll("input[name='ProductStep']").on("change", function (event) {
-        //update variable d'opération
-				wst_oper=this.value
-				//update div d'explication
-				for (var i = 0; i < explstep.length; i++) {
-          if (explstep[i].label == this.value) {
-            d3.select("#expltextdivstep").text(explstep[i].text);
-          }
-        }
-      });
-    });
+		// fonction qui modifie la valeur de mydisplayvalue avec la valeur en cours pour chaque pays
+		function updatedisplayvalue() {
+      for (var i = 0; i < jsondata.features.length; i++) {
+  			var countryID = jsondata.features[i].properties.wb_a2;
+				for (var j = 0; j < csvdata.length; j++) {
+					if (csvdata[j].waste == waste && csvdata[j].wst_oper == wst_oper && csvdata[j].countryID == countryID) {
+						jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2017;
+					}
+				}
+			}
+		}
+
+		// fonction qui renvoie la valeur maximale de mydisplayvalue
+		function maxdisplayvalue() {
+			var curr=0;
+			for (var i = 0; i < jsondata.features.length; i++) {
+				curr=Math.max(curr,jsondata.features[i].properties.mydisplayvalue);
+			}
+			return curr;
+		}
+		
+		//ajouter une attribut mydisplayvalue au geojson
+		updatedisplayvalue();
 
     //
     //   PARTIE CARTE
@@ -235,30 +240,31 @@
     var path = d3.geoPath().projection(projection);
     var color = d3
       .scaleQuantize()
-      .range(["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"]);
-
-		d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
-    d3.json(
-      "https://ev07.github.io/e-waste.dataviz/data/european-union-countries.geojson"
-    ).then(function (jsondata) {
-			//ajouter un attribut pour la valeur affichée.
-			for (var i = 0; i < jsondata.features.length; i++) {
-  			var countryID = jsondata.features[i].properties.wb_a2;
-				for (var j = 0; j < csvdata.length; j++) {
-					if (csvdata[j].waste == waste && csvdata[j].wst_oper == wst_oper && csvdata[j].countryID == countryID) {
-						jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2017;
-					}
-				}
-			};
+      .range(["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
+			.domain([0,maxdisplayvalue()]);
+		
+    function getfillingmap(d) {
+			//on prend la valeur recuperee plus haut
+			var value = d.properties.mydisplayvalue;
+      if (value) {
+        return color(value);
+      } else {
+        // si pas de valeur alors en gris
+        return "#ccc";
+      }
+		}
+			
 
       //polygones principaux
-      g.selectAll("path")
+      var polyprincipaux = g.selectAll("path")
         .data(jsondata.features)
         .enter()
         .append("path")
-        .attr("fill", "#ccc")
         .attr("d", path)
-        .attr("class", "polygon");
+				.attr("class", "polygon")
+				.style("fill", function (d) {
+            return getfillingmap(d);
+          });
 
 			// On rajoute un tooltip
 			var tooltip = d3.select('.Mapcontainer').append('div')
@@ -292,28 +298,79 @@
                   (mousePosition[0] + svgPosition.x + 15) +
 								  "px; top:" +
                  (mousePosition[1] + svgPosition.y + 10) +
-								  "px; opacity: 1")
-            .html("TEST " + val);
+									"px; opacity: 1")
+            .html(val + "kg/hab");
         })
 				.on("mouseout", function () {
             // on cache le toolip
             tooltip.classed("hidden", true);
-        });
-    })
-		});
+				});
+
+		console.log(polyprincipaux);
 
     //
     //   PARTIE GRAPHES ANNEXES
     //
 
-    var Gwidth = 200,
+    var Gwidth = 250,
       Gheight = 500;
     var Gsvg = d3
       .select(".Graphcontainer")
       .append("svg")
       .attr("width", Gwidth)
       .attr("height", Gheight)
-      .style("background-color", "green"); //juste pour voir
+			.style("background-color", "green"); //juste pour voir
+		
+		
+		//
+		// PARTIE UPDATE AU CHANGEMENT DE CATEGORIE
+    //
+			
+		console.log(jsondata.features[0]);
+		d3.selectAll("input[name='ProductType']").on("change", function (event) {
+        //update variable de type
+				waste=this.value
+				//update div d'explication
+				for (var i = 0; i < expldata.type.length; i++) {
+          if (expldata.type[i].label == this.value) {
+            d3.select("#expltextdivtype").text(expldata.type[i].text);
+          }
+				}
+				//update map value for tooltip
+				updatedisplayvalue();
+				//update color scale
+				color.domain([0,maxdisplayvalue()]);
+				//update map color
+				for (var i = 0; i < jsondata.features.length; i++) {
+				  polyprincipaux.filter(function (d) {
+					  return 0==0;
+					})
+					.style("fill", getfillingmap);
+			  }
+
+			});
+			
+
+      d3.selectAll("input[name='ProductStep']").on("change", function (event) {
+        //update variable d'opération
+				wst_oper=this.value
+				//update div d'explication
+				for (var i = 0; i < expldata.step.length; i++) {
+          if (expldata.step[i].label == this.value) {
+            d3.select("#expltextdivstep").text(expldata.step[i].text);
+          }
+				}
+				//update map value for tooltip
+				updatedisplayvalue();
+				//update color scale
+				color.domain([0,maxdisplayvalue()]);
+				
+      });
+
+		
+    });//fin du chargement du explanation
+	  });//fin du chargement du geojson
+		});//fin du chargement du csv
     </script>
   </body>
 </html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <link href="src/styles.css" rel="stylesheet" media="all" type="text/css">
+    <style>
+        div.tooltip {
+            color: #222;
+            background-color: #fff;
+            padding: 0.5em;
+            text-shadow: #f5f5f5 0 1px 0;
+            border-radius: 2px;
+            opacity: 0.9;
+            position: absolute;
+        }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li><a href="index.html">Accueil</a></li>
+          <li class="active"><a href="visuEU.html">Visualisation</a></li>
+          <li><a href="about.html">A propos</a></li>          
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid main" id="visu-complexe">
+        <div>
+            <h1 style="text-align: center;">Titre de la visualisation</h1>
+        </div>
+        <div class="container">
+            <h3> Légende </h3>
+            <div id="legendeVisu">
+
+            </div>
+        </div>
+        <div id="visuComp">
+
+        </div>
+    </div> 
+        <script>
+            // Création de la légende
+            var svgLeg = d3.select('#legendeVisu')
+                    .append('svg')
+                    .attr("width",900)
+                    .attr("height", 30);
+            svgLeg.append('rect')
+                .attr("x",0)
+                .attr("y",0)
+                .attr("width",20)
+                .attr("height",20)
+                .attr("fill","#d53e4f");
+            
+            svgLeg.append('text')
+                .attr("x",25)
+                .attr("y",15)
+                .text("Déchets produits");
+
+            svgLeg.append('rect')
+                .attr("x",200)
+                .attr("y",0)
+                .attr("width",20)
+                .attr("height",20)
+                .attr("fill","lightGreen");
+            
+            svgLeg.append('text')
+                .attr("x",225)
+                .attr("y",15)
+                .text("Déchets collectés");
+
+
+            // Création d'un tooltip
+            var tooltip = d3
+                .select("#visuComp")
+                .append("div")
+                .attr("class", "hidden tooltip");
+
+            // Définition de la taille
+            var width = 900,
+                height = 900;
+
+            //On définit les labels
+            var anneeY = ["2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018"];
+            anneeY.sort();
+
+            let labelX = [
+                "",
+                "Gros appareils ménagers", //EE_LHA
+                "Petits appareils ménagers", //EE_SHA
+                "Equipements informatiques et de télécommunications", //EE_ITT
+                "Matériel grand public", //EE_CPV_CON
+                "Jouets, équipements de loisirs et de sport", //EE_TLS
+                "Total", //TOTAL
+                " ",
+            ];
+
+            var svg = d3
+                .select("#visuComp")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // Création des axes
+            var xscale = d3
+                .scalePoint()
+                .domain(labelX)
+                .range([0, width - 100]);
+
+            var yscale = d3
+                .scalePoint()
+                .domain(anneeY)
+                .range([height / 2, 0]);
+
+            var x_axis = d3.axisBottom(xscale);
+            x_axis.tickSize(-height)
+
+            var y_axis = d3.axisLeft(yscale);
+            y_axis.tickSize(-width + 100)
+
+            svg.append("g").attr("transform", "translate(50, 10)").call(y_axis);
+            svg.selectAll(".tick:not(:first-of-type) line").attr("stroke", "black").attr("stroke-dasharray", "2,2");
+
+            var xAxisTranslate = height / 2 + 10;
+
+            svg
+                .append("g")
+                .attr("transform", "translate(50, " + xAxisTranslate + ")")
+                .call(x_axis)
+                .selectAll("text")
+                .attr("transform", "translate(-10,10)rotate(-45)")
+                .style("text-anchor", "end")
+                .style("font-size", 13);
+
+            // Affichage des données en fonction du pays
+            var paysActuel = "FR";
+            d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
+                for (var i = 0; i < csvdata.length; i++) {
+                    if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && ( csvdata[i].wst_oper == "COL" || csvdata[i].wst_oper == "MKT")){
+                        var valX = "";
+                        var op = "";
+                        switch (csvdata[i].waste) { //On vérifie le type du déchet pour l'afficher au bon endroit
+                            case 'EE_LHA':
+                                valX = "Gros appareils ménagers";
+                                break;
+                            case 'EE_SHA':
+                                valX = "Petits appareils ménagers";
+                                break;
+                            case 'EE_ITT':
+                                valX = "Equipements informatiques et de télécommunications";
+                                break;
+                            case 'EE_CPV_CON':
+                                valX = "Matériel grand public";
+                                break;
+                            case 'EE_TLS':
+                                valX = "Jouets, équipements de loisirs et de sport";
+                                break;
+                            case 'TOTAL':
+                                valX = "Total";
+                                break;
+                            default:
+                                console.log(`Problème avec la catégorie de déchet`);
+                            }
+
+                        if(csvdata[i].wst_oper == "MKT"){ //Déchet produit à gauche
+                            op = "-";
+                        } else if (csvdata[i].wst_oper == "COL"){ // Déchet collecté à droite
+                            op = "+";
+                        }
+
+                        //On colorie la surface pour les déchets collectés
+                        if(csvdata[i].wst_oper == "COL"){
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'lightGreen');
+                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'lightGreen');
+                        }
+
+                        //On colorie la surface pour les déchets produits 
+                        if(csvdata[i].wst_oper == "MKT"){
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,"#d53e4f");
+                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,"#d53e4f");
+                        }
+
+                        // On dessine les points 
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2005,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2006,eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[1]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2007,eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[2]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2008,eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[3]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2009,eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[4]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2010,eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[5]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2011,eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[6]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2012,eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[7]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2013,eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[8]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2014,eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[9]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2015,eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[10]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2016,eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[11]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2017,eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[12]) + 10);
+                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2018,eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[13]) + 10);
+
+                        //On dessine les lignes
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10 ,yscale(anneeY[1]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'black');
+                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'black');
+
+                    }
+                }
+            });
+
+            function appendCircle(svg,op,data,cx, cy) {
+                svg
+                    .append("circle")
+                    .attr("cx", cx)
+                    .attr("cy", cy)
+                    .attr("r", 3)
+                    .on("mousemove", function (event, d) {
+                        // on recupere la position de la souris
+                        var mousePosition = d3.pointer(event, this);
+                        // on affiche le toolip
+                        if(op == "MKT"){ // Pour le déchets produits
+                            tooltip
+                                .classed("hidden", false)
+                                .attr(
+                                "style",
+                                "left:" +
+                                    (mousePosition[0] + 15) +
+                                    "px; top:" +
+                                    (mousePosition[1] - 35) +
+                                    "px"
+                                )
+                                .html(data + " kg/hab produit");
+                        } else if (op == "COL"){ // Pour les déchets collectés
+                            tooltip
+                                .classed("hidden", false)
+                                .attr(
+                                "style",
+                                "left:" +
+                                    (mousePosition[0] + 15) +
+                                    "px; top:" +
+                                    (mousePosition[1] - 35) +
+                                    "px"
+                                )
+                                .html(data + " kg/hab collecté");
+                        }
+                    })
+                    .on("mouseout", function () { // on cache le toolip
+                        tooltip.classed("hidden", true);
+                    });
+            }
+
+            function drawLine(svg,x1,x2,y1,y2,color){
+                svg
+                    .append('line')
+                    .style("stroke", color)
+                    .style("stroke-width", 2)
+                    .attr("x1", x1)
+                    .attr("y1", y1)
+                    .attr("x2", x2)
+                    .attr("y2", y2);
+            }
+
+            function drawQuad(svg,x1,x2,x3,y1,y2,color){
+                if(x3 == x1){
+                    var data = [
+                        { x: x1, low : y1,high: y1 },
+                        { x: x2, low : y1,high: y1 },
+                        { x: x3, low : y2,high: y1 }
+                    ];
+                } else if (x2 == x1){
+                    var data = [
+                        { x: x1, low : y2,high: y1 },
+                        { x: x2, low : y2,high: y1 },
+                        { x: x3, low : y2,high: y2 }
+                    ];
+                } else if(x2 < x3){
+                    var data = [
+                        { x: x1, low : y2,high: y1 },
+                        { x: x2, low : y2,high: y1 },
+                        { x: x3, low : y2,high: y2 }
+                    ];
+                } else {
+                    var data = [
+                        { x: x1, low : y2,high: y1 },
+                        { x: x2, low : y2,high: y1 },
+                        { x: x3, low : y1,high: y1 }
+                    ];
+                }
+
+                var Gen = d3
+                    .area()
+                    .x((p) => p.x)
+                    .y0((p) => p.low)
+                    .y1((p) => p.high);
+
+                svg.append("path")
+                    .attr("d", Gen(data))
+                    .attr("fill", color)
+            } 
+
+            function drawQuadInv(svg,x1,x2,x3,y1,y2,color){
+                if(x3 == x1){
+                    var data = [
+                        { x: x1, low : y1,high: y1 },
+                        { x: x2, low : y1,high: y1 },
+                        { x: x3, low : y2,high: y1 }
+                    ];
+                } else if (x2 == x1){
+                    var data = [
+                        { x: x1, low : y2,high: y1 },
+                        { x: x2, low : y2,high: y1 },
+                        { x: x3, low : y2,high: y2 }
+                    ];
+                } else if(x2 < x3){
+                    var data = [
+                        { x: x1, low : y2,high: y1 },
+                        { x: x2, low : y2,high: y1 },
+                        { x: x3, low : y2,high: y2 }
+                    ];
+                } else {
+                    var data = [
+                        { x: x1, low : y2,high: y1 },
+                        { x: x2, low : y2,high: y1 },
+                        { x: x3, low : y2,high: y2 }
+                    ];
+                }
+
+                var Gen = d3
+                    .area()
+                    .x((p) => p.x)
+                    .y0((p) => p.low)
+                    .y1((p) => p.high);
+
+                svg.append("path")
+                    .attr("d", Gen(data))
+                    .attr("fill", color)
+            } 
+
+        </script>
+  </body>
+</html>
