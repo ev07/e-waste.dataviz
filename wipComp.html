@@ -136,111 +136,115 @@
                 .attr("transform", "translate(-10,10)rotate(-45)")
                 .style("text-anchor", "end")
                 .style("font-size", 13);
+            
+            changeDataCountry("FR");
 
-            // Affichage des données en fonction du pays
-            var paysActuel = "FR";
-            d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
-                for (var i = 0; i < csvdata.length; i++) {
-                    if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && ( csvdata[i].wst_oper == "COL" || csvdata[i].wst_oper == "MKT")){
-                        var valX = "";
-                        var op = "";
-                        switch (csvdata[i].waste) { //On vérifie le type du déchet pour l'afficher au bon endroit
-                            case 'EE_LHA':
-                                valX = "Gros appareils ménagers";
-                                break;
-                            case 'EE_SHA':
-                                valX = "Petits appareils ménagers";
-                                break;
-                            case 'EE_ITT':
-                                valX = "Equipements informatiques et de télécommunications";
-                                break;
-                            case 'EE_CPV_CON':
-                                valX = "Matériel grand public";
-                                break;
-                            case 'EE_TLS':
-                                valX = "Jouets, équipements de loisirs et de sport";
-                                break;
-                            case 'TOTAL':
-                                valX = "Total";
-                                break;
-                            default:
-                                console.log(`Problème avec la catégorie de déchet`);
+            function changeDataCountry(pays){
+                // Affichage des données en fonction du pays
+                var paysActuel = pays;
+                d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
+                    for (var i = 0; i < csvdata.length; i++) {
+                        if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && ( csvdata[i].wst_oper == "COL" || csvdata[i].wst_oper == "MKT")){
+                            var valX = "";
+                            var op = "";
+                            switch (csvdata[i].waste) { //On vérifie le type du déchet pour l'afficher au bon endroit
+                                case 'EE_LHA':
+                                    valX = "Gros appareils ménagers";
+                                    break;
+                                case 'EE_SHA':
+                                    valX = "Petits appareils ménagers";
+                                    break;
+                                case 'EE_ITT':
+                                    valX = "Equipements informatiques et de télécommunications";
+                                    break;
+                                case 'EE_CPV_CON':
+                                    valX = "Matériel grand public";
+                                    break;
+                                case 'EE_TLS':
+                                    valX = "Jouets, équipements de loisirs et de sport";
+                                    break;
+                                case 'TOTAL':
+                                    valX = "Total";
+                                    break;
+                                default:
+                                    console.log(`Problème avec la catégorie de déchet`);
+                                }
+
+                            if(csvdata[i].wst_oper == "MKT"){ //Déchet produit à gauche
+                                op = "-";
+                            } else if (csvdata[i].wst_oper == "COL"){ // Déchet collecté à droite
+                                op = "+";
                             }
 
-                        if(csvdata[i].wst_oper == "MKT"){ //Déchet produit à gauche
-                            op = "-";
-                        } else if (csvdata[i].wst_oper == "COL"){ // Déchet collecté à droite
-                            op = "+";
+                            //On colorie la surface pour les déchets collectés
+                            if(csvdata[i].wst_oper == "COL"){
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'lightGreen');
+                                drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'lightGreen');
+                            }
+
+                            //On colorie la surface pour les déchets produits 
+                            if(csvdata[i].wst_oper == "MKT"){
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,"#d53e4f");
+                                drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,"#d53e4f");
+                            }
+
+                            // On dessine les points 
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2005,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2006,eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[1]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2007,eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[2]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2008,eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[3]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2009,eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[4]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2010,eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[5]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2011,eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[6]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2012,eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[7]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2013,eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[8]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2014,eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[9]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2015,eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[10]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2016,eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[11]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2017,eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[12]) + 10);
+                            appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2018,eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[13]) + 10);
+
+                            //On dessine les lignes
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10 ,yscale(anneeY[1]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'black');
+                            drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'black');
+
                         }
-
-                        //On colorie la surface pour les déchets collectés
-                        if(csvdata[i].wst_oper == "COL"){
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'lightGreen');
-                            drawQuad(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'lightGreen');
-                        }
-
-                        //On colorie la surface pour les déchets produits 
-                        if(csvdata[i].wst_oper == "MKT"){
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,"#d53e4f");
-                            drawQuadInv(svg,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,"#d53e4f");
-                        }
-
-                        // On dessine les points 
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2005,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2006,eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[1]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2007,eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[2]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2008,eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[3]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2009,eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[4]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2010,eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[5]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2011,eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[6]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2012,eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[7]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2013,eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[8]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2014,eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[9]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2015,eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[10]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2016,eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[11]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2017,eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[12]) + 10);
-                        appendCircle(svg,csvdata[i].wst_oper,csvdata[i].y2018,eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[13]) + 10);
-
-                        //On dessine les lignes
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10 ,yscale(anneeY[1]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'black');
-                        drawLine(svg,eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'black');
-
                     }
-                }
-            });
+                });
+            }
 
             function appendCircle(svg,op,data,cx, cy) {
                 svg
