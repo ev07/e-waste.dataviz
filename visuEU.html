@@ -262,6 +262,13 @@
         .append("path")
         .attr("d", path)
         .attr("class", "pathhidden")
+        .on('click',function(event,d){
+          var name = d.properties.iso_a2;
+          if(name == "-99"){
+            name = "FR";
+          }
+          changeDataCountry(name);
+        })
 				//tooltip modif
 				.on('mouseover', function(event, d) {
           var mousePosition = d3.pointer(event);
@@ -448,7 +455,14 @@
             
     changeDataCountry("FR");
 
+    function clearGraph(svgPays){
+      svgPays.selectAll('circle').remove();
+      svgPays.selectAll('#lineToDelete').remove();
+      svgPays.selectAll('#pathToDelete').remove();
+    }
+
     function changeDataCountry(pays){
+        clearGraph(svgPays);
         // Affichage des données en fonction du pays
         var paysActuel = pays;
         d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
@@ -601,6 +615,7 @@
           .append('line')
           .style("stroke", color)
           .style("stroke-width", 2)
+          .attr("id","lineToDelete")
           .attr("x1", x1)
           .attr("y1", y1)
           .attr("x2", x2)
@@ -643,6 +658,7 @@
       svgPays.append("path")
         .attr("d", Gen(data))
         .attr("fill", color)
+        .attr("id","pathToDelete");
     } 
 
     function drawQuadInv(svgPays,x1,x2,x3,y1,y2,color){
@@ -680,7 +696,8 @@
 
       svgPays.append("path")
           .attr("d", Gen(data))
-          .attr("fill", color);
+          .attr("fill", color)
+          .attr("id","pathToDelete");
     } 
     </script>
   </body>
