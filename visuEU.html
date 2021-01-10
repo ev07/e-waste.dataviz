@@ -424,6 +424,7 @@
     var svgPays = d3
         .select("#visuPays")
         .append("svg")
+        .attr("id","svgPays")
         .attr("width", widthPays)
         .attr("height", heightPays);
 
@@ -588,6 +589,7 @@
         .on("mousemove", function (event, d) {
             // on recupere la position de la souris
             var mousePosition = d3.pointer(event, this);
+            var svgPos = getNodePos(d3.select("#svgPays").node())
             // on affiche le toolip
             if(op == "MKT"){ // Pour le déchets produits
               tooltipPays
@@ -595,9 +597,9 @@
                   .attr(
                   "style",
                   "left:" +
-                      (mousePosition[0] + 15) +
+                      (svgPos.x + mousePosition[0] + 15) +
                       "px; top:" +
-                      (mousePosition[1] - 35) +
+                      (svgPos.y + mousePosition[1] - 35) +
                       "px"
                   )
                   .html(data + " kg/hab produit");
@@ -607,9 +609,9 @@
                   .attr(
                   "style",
                   "left:" +
-                      (mousePosition[0] + 15) +
+                      (svgPos.x + mousePosition[0] + 15) +
                       "px; top:" +
-                      (mousePosition[1] - 35) +
+                      (svgPos.y + mousePosition[1] - 35) +
                       "px"
                   )
                   .html(data + " kg/hab collecté");
