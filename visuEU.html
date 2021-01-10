@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
@@ -20,13 +21,863 @@
       </div>
     </nav>
     <div class="container-fluid main">
-      <h1>Visu</h1>
+      <!--h1>Visu</h1>
       <a href="wipEU.html">
         <h3>Visu provisoire pour l'EU</h3>
-      </a>
-    </div> 
-    
+      </a-->
+
+      <!-- Visualisation de l'Europe -->
+      <div class="Titlecontainer">
+				<h1>Titre introductif</h1>
+			</div>
+			<div class="Explanationcontainer">
+				<p>
+					Il est possible de visualiser les indicateurs pour chaque pays. Pour cela,
+					il faut cliquer sur le pays d'intérêt sur la carte.
+				</p>
+			</div>
+		
+		  <div class="wrapper">
+			<!--Déclaration des radiobutton-->
+		
+			<div class="Selectioncontainer">
+				<p>Choisissez le type de déchet :</p>
+				<div>
+					<input type="radio" id="TOTAL" name="ProductType" value="TOTAL" checked />
+					<label for="TOTAL">Total</label>
+				</div>
+				<div>
+					<input type="radio" id="EE_LHA" name="ProductType" value="EE_LHA" />
+					<label for="EE_LHA">Gros appareils ménagers</label>
+				</div>
+				<div>
+					<input type="radio" id="EE_SHA" name="ProductType" value="EE_SHA" />
+					<label for="EE_SHA">Petits appareils ménagers</label>
+				</div>
+				<div>
+					<input type="radio" id="EE_ITT" name="ProductType" value="EE_ITT" />
+					<label for="EE_ITT">
+						Equipements informatiques et de télécommunications
+					</label>
+				</div>
+				<div>
+					<input
+						type="radio"
+						id="EE_CPV_CON"
+						name="ProductType"
+						value="EE_CPV_CON"
+					/>
+					<label for="EE_CPV_CON"> Matériel grand public </label>
+				</div>
+				<div>
+					<input type="radio" id="EE_TLS" name="ProductType" value="EE_TLS" />
+					<label for="EE_TLS"> Jouets, équipements de loisirs et de sport</label>
+				</div>
+		
+				<p>Choisissez l'étape du traitement:</p>
+				<div>
+					<input type="radio" id="MKT" name="ProductStep" value="MKT" checked />
+					<label for="MKT"> Quantité mise sur le marché</label>
+				</div>
+				<div>
+					<input type="radio" id="COL" name="ProductStep" value="COL" />
+					<label for="COL"> Quantité collectée comme déchêt</label>
+				</div>
+				<div>
+					<input type="radio" id="RCY_REU" name="ProductStep" value="RCY_REU" />
+					<label for="RCY_REU">
+						Quantité recyclée ou partiellement réutilisée</label
+					>
+				</div>
+				<div>
+					<input type="radio" id="RCV" name="ProductStep" value="RCV" />
+					<label for="RCV"> Quantité valorisée en énergie</label>
+				</div>
+				<div>
+					<input type="radio" id="REU" name="ProductStep" value="REU" />
+					<label for="REU"> Quantité réparée et réutilisée</label>
+				</div>
+			</div>
+		
+			<div class="Mapcontainer"></div>
+			<div class="Graphcontainer"></div>
+		
+			<!--div pour mettre l'explication de sélection-->
+			<div class="Explanationcontainer">
+				<h3>Produits concernés : </h3>
+				<div id="expltextdivtype">
+					Total toutes catégories
+				</div>
+				<h3>Etape de collection concernée :</h3>
+				<div id="expltextdivstep">
+					La quantité mise sur le marché est celle déclarée par les vendeurs et producteurs. A défaut, elle est estimée à partir de la balance commerciale Imports - Exports + Production domestique.
+				</div>
+			</div>
+			<!--div pour voir si le lien marche>
+      <div id="foo">foo</div-->
+      </div> 
+      
+      <br>
+      <br>
+      <!-- Visualisation par pays -->
+      <div id="visu-pays">
+        <div>
+            <h1 style="text-align: center;" id="paysChoisi">Aucun pays sélectionné : France par défaut</h1>
+            <h3> Titre de la visu</h3>
+        </div>
+        <div class="container">
+            <h3> Légende </h3>
+            <div id="legendeVisu">
+
+            </div>
+        </div>
+        <div id="visuPays">
+
+        </div>
+        <!-- Deuxième visu pour le pays-->
+        <div>
+            <h3>Titre de la visu</h3>
+            <h4>Choix de l'année</h4>
+            <div>
+                <div class="col-sm"><div id="slider-time"></div></div>
+            </div>
+            <input id="namePays" type="hidden" value="FR">
+            <div id="visuPaysSimple">
+
+            </div>
+        </div>
+      </div> 
+		</div> 
+		
     <script>
+      // VISUALISATION DE L'EUROPE
+
+			//
+			// Utilitaire
+			//
+
+			//récupérer la position d'un élément dans la page
+			function getNodePos(el){
+    		var body = d3.select('body').node();
+
+    		for (var lx = 0, ly = 0;
+          el != null && el != body;
+       	  lx += (el.offsetLeft || el.clientLeft), ly += (el.offsetTop || el.clientTop), el = (el.offsetParent || el.parentNode));
+    		return {x: lx, y: ly};
+			}
+
+		//
+    //   PARTIE SELECTION DES ATTRIBUTS
+		//
+
+		d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
+		d3.json("https://ev07.github.io/e-waste.dataviz/data/european-union-countries.geojson").then(function (jsondata) {
+		d3.json("https://ev07.github.io/e-waste.dataviz/data/explanation.json").then(function (expldata) {
+      
+
+    var waste = d3
+      .select('input[name="ProductType"]:checked')
+      .property("value");
+		var wst_oper = d3
+      .select('input[name="ProductStep"]:checked')
+      .property("value");
+		var year = "2017";
+    var unit = "KG_HAB";
+		
+
+		// fonction qui modifie la valeur de mydisplayvalue avec la valeur en cours pour chaque pays
+		function updatedisplayvalue() {
+      for (var i = 0; i < jsondata.features.length; i++) {
+  			var countryID = jsondata.features[i].properties.wb_a2;
+				for (var j = 0; j < csvdata.length; j++) {
+					if (csvdata[j].waste == waste && csvdata[j].wst_oper == wst_oper && csvdata[j].countryID == countryID) {
+						jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2017;
+					}
+				}
+			}
+		}
+
+		// fonction qui renvoie la valeur maximale de mydisplayvalue
+		function maxdisplayvalue() {
+			var curr=0;
+			for (var i = 0; i < jsondata.features.length; i++) {
+				curr=Math.max(curr,jsondata.features[i].properties.mydisplayvalue);
+			}
+			return curr;
+		}
+		
+		//ajouter une attribut mydisplayvalue au geojson
+		updatedisplayvalue();
+
+    //
+    //   PARTIE CARTE
+    //
+
+    var Mwidth = 600,
+      Mheight = 500;
+    var Msvg = d3
+      .select(".Mapcontainer")
+      .append("svg")
+      .attr("width", Mwidth)
+      .attr("height", Mheight);
+
+    // On rajoute un groupe englobant toute la visualisation pour plus tard
+    var g = Msvg.append("g");
+
+    var projection = d3
+      //.geoConicConformal()
+      .geoMercator()
+      .translate([Mwidth / 2, Mheight / 2])
+      .scale([500])
+      .center([15.454071, 50.0])
+      .scale(650);
+
+    var path = d3.geoPath().projection(projection);
+    var color = d3
+      .scaleQuantize()
+      .range(["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
+			.domain([0,maxdisplayvalue()]);
+		
+    function getfillingmap(d) {
+			//on prend la valeur recuperee plus haut
+			var value = d.properties.mydisplayvalue;
+      if (value) {
+        return color(value);
+      } else {
+        // si pas de valeur alors en gris
+        return "#ccc";
+      }
+		}
+			
+
+      //polygones principaux
+      var polyprincipaux = g.selectAll("path")
+        .data(jsondata.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+				.attr("class", "polygon")
+				.style("fill", function (d) {
+            return getfillingmap(d);
+          });
+
+			// On rajoute un tooltip
+			var tooltip = d3.select('.Mapcontainer').append('div')
+			      .attr('class', 'hidden tooltip');
+
+
+
+      //polygones transparents pour le réhaussement de contours
+      //ajout d'un lien vers la visu par pays
+      
+			g.selectAll("pathh")
+        .data(jsondata.features)
+        .enter()
+        .append("a")
+        .attr("xlink:href", "#visu-pays")
+        .append("path")
+        .attr("d", path)
+        .attr("class", "pathhidden")
+        .on('click',function(event,d){
+          var name = d.properties.iso_a2;
+          var longname = d.properties.name_sort;
+          if(name == "-99"){
+            name = "FR";
+          }
+          changeTitleName(longname);
+          changeDataCountry(name);
+          d3.select("#namePays").attr("value",name);
+          graphPays('2005');
+        })
+				//tooltip modif
+				.on('mouseover', function(event, d) {
+          var mousePosition = d3.pointer(event);
+					var svgPosition = getNodePos(d3.select("svg").node())
+          
+					//récupérer la quantité
+					var val = d.properties.mydisplayvalue
+
+					//modifier le tooltip
+					tooltip.classed("hidden", false)
+  		      .attr("style",
+                "left:" +
+                  (mousePosition[0] + svgPosition.x + 15) +
+								  "px; top:" +
+                 (mousePosition[1] + svgPosition.y + 10) +
+									"px; opacity: 1")
+            .html(val + "kg/hab");
+        })
+				.on("mouseout", function () {
+            // on cache le toolip
+            tooltip.classed("hidden", true);
+				});
+
+		console.log(polyprincipaux);
+
+    //
+    //   PARTIE GRAPHES ANNEXES
+    //
+
+    var Gwidth = 250,
+      Gheight = 500;
+    var Gsvg = d3
+      .select(".Graphcontainer")
+      .append("svg")
+      .attr("width", Gwidth)
+      .attr("height", Gheight)
+			.style("background-color", "green"); //juste pour voir
+		
+		
+		//
+		// PARTIE UPDATE AU CHANGEMENT DE CATEGORIE
+    //
+			
+		console.log(jsondata.features[0]);
+		d3.selectAll("input[name='ProductType']").on("change", function (event) {
+        //update variable de type
+				waste=this.value
+				//update div d'explication
+				for (var i = 0; i < expldata.type.length; i++) {
+          if (expldata.type[i].label == this.value) {
+            d3.select("#expltextdivtype").text(expldata.type[i].text);
+          }
+				}
+				//update map value for tooltip
+				updatedisplayvalue();
+				//update color scale
+				color.domain([0,maxdisplayvalue()]);
+				//update map color
+				for (var i = 0; i < jsondata.features.length; i++) {
+				  polyprincipaux.filter(function (d) {
+					  return 0==0;
+					})
+					.style("fill", getfillingmap);
+			  }
+
+			});
+			
+
+      d3.selectAll("input[name='ProductStep']").on("change", function (event) {
+        //update variable d'opération
+				wst_oper=this.value
+				//update div d'explication
+				for (var i = 0; i < expldata.step.length; i++) {
+          if (expldata.step[i].label == this.value) {
+            d3.select("#expltextdivstep").text(expldata.step[i].text);
+          }
+				}
+				//update map value for tooltip
+				updatedisplayvalue();
+				//update color scale
+				color.domain([0,maxdisplayvalue()]);
+				
+      });
+
+		
+    });//fin du chargement du explanation
+	  });//fin du chargement du geojson
+    });//fin du chargement du csv
+    
+
+    // VISUALISATION PAR PAYS
+    // Première visualisation
+    // Création de la légende
+    var svgLeg = d3.select('#legendeVisu')
+                    .append('svg')
+                    .attr("width",900)
+                    .attr("height", 30);
+    svgLeg.append('rect')
+          .attr("x",0)
+          .attr("y",0)
+          .attr("width",20)
+          .attr("height",20)
+          .attr("fill","#d53e4f");
+            
+    svgLeg.append('text')
+        .attr("x",25)
+        .attr("y",15)
+        .text("Déchets produits");
+
+    svgLeg.append('rect') 
+        .attr("x",200)
+        .attr("y",0)
+        .attr("width",20)
+        .attr("height",20)
+        .attr("fill","lightGreen");
+            
+    svgLeg.append('text')
+        .attr("x",225)
+        .attr("y",15)
+        .text("Déchets collectés");
+
+
+    // Création d'un tooltip
+    var tooltipPays = d3
+        .select("#visuPays")
+        .append("div")
+        .attr("class", "hidden tooltip")
+        .attr("id","tooltipPays");
+
+    // Définition de la taille
+    var widthPays = 900,
+        heightPays = 800;
+
+    //On définit les labels
+    var anneeY = ["2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018"];
+    anneeY.sort();
+
+    let labelX = [
+        "",
+        "Gros appareils ménagers", //EE_LHA
+        "Petits appareils ménagers", //EE_SHA
+        "Equipements informatiques et de télécommunications", //EE_ITT
+        "Matériel grand public", //EE_CPV_CON
+        "Jouets, équipements de loisirs et de sport", //EE_TLS
+        "Total", //TOTAL
+        " ",
+    ];
+
+    var svgPays = d3
+        .select("#visuPays")
+        .append("svg")
+        .attr("id","svgPays")
+        .attr("width", widthPays)
+        .attr("height", heightPays);
+
+    // Création des axes
+    var xscale = d3
+        .scalePoint()
+        .domain(labelX)
+        .range([0, widthPays - 100]);
+
+    var yscale = d3
+        .scalePoint()
+        .domain(anneeY)
+        .range([heightPays / 2, 0]);
+
+    var x_axis = d3.axisBottom(xscale);
+    x_axis.tickSize(-heightPays);
+
+    var y_axis = d3.axisLeft(yscale);
+    y_axis.tickSize(-widthPays + 100);
+
+    svgPays.append("g").attr("transform", "translate(50, 10)").call(y_axis);
+    svgPays.selectAll(".tick:not(:first-of-type) line").attr("stroke", "black").attr("stroke-dasharray", "2,2");
+
+   var xAxisTranslate = heightPays / 2 + 10;
+
+    svgPays
+        .append("g")
+        .attr("transform", "translate(50, " + xAxisTranslate + ")")
+        .call(x_axis)
+        .selectAll("text")
+        .attr("transform", "translate(-10,10)rotate(-45)")
+        .style("text-anchor", "end")
+        .style("font-size", 13);
+            
+    changeDataCountry("FR");
+
+    function changeTitleName(name){
+      d3.select("#paysChoisi")
+        .text("Pays sélectionné : " + name);
+    }
+
+    function clearGraph(svgPays){
+      svgPays.selectAll('circle').remove();
+      svgPays.selectAll('#lineToDelete').remove();
+      svgPays.selectAll('#pathToDelete').remove();
+    }
+
+    function changeDataCountry(pays){
+        clearGraph(svgPays);
+        // Affichage des données en fonction du pays
+        var paysActuel = pays;
+        d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
+            for (var i = 0; i < csvdata.length; i++) {
+                if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && ( csvdata[i].wst_oper == "COL" || csvdata[i].wst_oper == "MKT")){
+                    var valX = "";
+                    var op = "";
+                    switch (csvdata[i].waste) { //On vérifie le type du déchet pour l'afficher au bon endroit
+                        case 'EE_LHA':
+                            valX = "Gros appareils ménagers";
+                            break;
+                        case 'EE_SHA':
+                            valX = "Petits appareils ménagers";
+                            break;
+                        case 'EE_ITT':
+                            valX = "Equipements informatiques et de télécommunications";
+                            break;
+                        case 'EE_CPV_CON':
+                            valX = "Matériel grand public";
+                            break;
+                        case 'EE_TLS':
+                            valX = "Jouets, équipements de loisirs et de sport";
+                            break;
+                        case 'TOTAL':
+                            valX = "Total";
+                            break;
+                        default:
+                            console.log(`Problème avec la catégorie de déchet`);
+                        }
+
+                    if(csvdata[i].wst_oper == "MKT"){ //Déchet produit à gauche
+                        op = "-";
+                    } else if (csvdata[i].wst_oper == "COL"){ // Déchet collecté à droite
+                        op = "+";
+                    }
+
+                    //On colorie la surface pour les déchets collectés
+                    if(csvdata[i].wst_oper == "COL"){
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'lightGreen');
+                        drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'lightGreen');
+                    }
+
+                    //On colorie la surface pour les déchets produits 
+                    if(csvdata[i].wst_oper == "MKT"){
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,"#d53e4f");
+                        drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,"#d53e4f");
+                    }
+
+                    // On dessine les points 
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2005,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2006,eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[1]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2007,eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[2]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2008,eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[3]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2009,eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[4]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2010,eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[5]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2011,eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[6]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2012,eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[7]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2013,eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[8]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2014,eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[9]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2015,eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[10]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2016,eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[11]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2017,eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[12]) + 10);
+                    appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2018,eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[13]) + 10);
+
+                    //On dessine les lignes
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10 ,yscale(anneeY[1]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2007),eval(xscale(valX) + 50 + op + csvdata[i].y2008),yscale(anneeY[2]) + 10,yscale(anneeY[3]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2008),eval(xscale(valX) + 50 + op + csvdata[i].y2009),yscale(anneeY[3]) + 10,yscale(anneeY[4]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2009),eval(xscale(valX) + 50 + op + csvdata[i].y2010),yscale(anneeY[4]) + 10,yscale(anneeY[5]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2010),eval(xscale(valX) + 50 + op + csvdata[i].y2011),yscale(anneeY[5]) + 10,yscale(anneeY[6]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2011),eval(xscale(valX) + 50 + op + csvdata[i].y2012),yscale(anneeY[6]) + 10,yscale(anneeY[7]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2012),eval(xscale(valX) + 50 + op + csvdata[i].y2013),yscale(anneeY[7]) + 10,yscale(anneeY[8]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2013),eval(xscale(valX) + 50 + op + csvdata[i].y2014),yscale(anneeY[8]) + 10,yscale(anneeY[9]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2014),eval(xscale(valX) + 50 + op + csvdata[i].y2015),yscale(anneeY[9]) + 10,yscale(anneeY[10]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2015),eval(xscale(valX) + 50 + op + csvdata[i].y2016),yscale(anneeY[10]) + 10,yscale(anneeY[11]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2016),eval(xscale(valX) + 50 + op + csvdata[i].y2017),yscale(anneeY[11]) + 10,yscale(anneeY[12]) + 10,'black');
+                    drawLine(svgPays,eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'black');
+
+                }
+            }
+        });
+    }
+
+    function appendCircle(svgPays,op,data,cx, cy) {
+      svgPays
+        .append("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", 3)
+        .on("mousemove", function (event, d) {
+            // on recupere la position de la souris
+            var mousePosition = d3.pointer(event, this);
+            var svgPos = getNodePos(d3.select("#svgPays").node())
+            // on affiche le toolip
+            if(op == "MKT"){ // Pour le déchets produits
+              tooltipPays
+                  .classed("hidden", false)
+                  .attr(
+                  "style",
+                  "left:" +
+                      (svgPos.x + mousePosition[0] + 15) +
+                      "px; top:" +
+                      (svgPos.y + mousePosition[1] - 35) +
+                      "px"
+                  )
+                  .html(data + " kg/hab produit");
+            } else if (op == "COL"){ // Pour les déchets collectés
+              tooltipPays
+                  .classed("hidden", false)
+                  .attr(
+                  "style",
+                  "left:" +
+                      (svgPos.x + mousePosition[0] + 15) +
+                      "px; top:" +
+                      (svgPos.y + mousePosition[1] - 35) +
+                      "px"
+                  )
+                  .html(data + " kg/hab collecté");
+            }
+        })
+        .on("mouseout", function () { // on cache le toolip
+          tooltipPays.classed("hidden", true);
+        });
+    }
+
+    function drawLine(svgPays,x1,x2,y1,y2,color){
+      svgPays
+          .append('line')
+          .style("stroke", color)
+          .style("stroke-width", 2)
+          .attr("id","lineToDelete")
+          .attr("x1", x1)
+          .attr("y1", y1)
+          .attr("x2", x2)
+          .attr("y2", y2);
+    }
+
+    function drawQuad(svgPays,x1,x2,x3,y1,y2,color){
+      if(x3 == x1){
+          var data = [
+              { x: x1, low : y1,high: y1 },
+              { x: x2, low : y1,high: y1 },
+              { x: x3, low : y2,high: y1 }
+          ];
+      } else if (x2 == x1){
+          var data = [
+              { x: x1, low : y2,high: y1 },
+              { x: x2, low : y2,high: y1 },
+              { x: x3, low : y2,high: y2 }
+          ];
+      } else if(x2 < x3){
+          var data = [
+              { x: x1, low : y2,high: y1 },
+              { x: x2, low : y2,high: y1 },
+              { x: x3, low : y2,high: y2 }
+          ];
+      } else {
+          var data = [
+              { x: x1, low : y2,high: y1 },
+              { x: x2, low : y2,high: y1 },
+              { x: x3, low : y1,high: y1 }
+          ];
+      }
+
+      var Gen = d3
+          .area()
+          .x((p) => p.x)
+          .y0((p) => p.low)
+          .y1((p) => p.high);
+
+      svgPays.append("path")
+        .attr("d", Gen(data))
+        .attr("fill", color)
+        .attr("id","pathToDelete");
+    } 
+
+    function drawQuadInv(svgPays,x1,x2,x3,y1,y2,color){
+      if(x3 == x1){
+          var data = [
+              { x: x1, low : y1,high: y1 },
+              { x: x2, low : y1,high: y1 },
+              { x: x3, low : y2,high: y1 }
+          ];
+      } else if (x2 == x1){
+          var data = [
+              { x: x1, low : y2,high: y1 },
+              { x: x2, low : y2,high: y1 },
+              { x: x3, low : y2,high: y2 }
+          ];
+      } else if(x2 < x3){
+          var data = [
+              { x: x1, low : y2,high: y1 },
+              { x: x2, low : y2,high: y1 },
+              { x: x3, low : y2,high: y2 }
+          ];
+      } else {
+          var data = [
+              { x: x1, low : y2,high: y1 },
+              { x: x2, low : y2,high: y1 },
+              { x: x3, low : y2,high: y2 }
+          ];
+      }
+
+      var Gen = d3
+          .area()
+          .x((p) => p.x)
+          .y0((p) => p.low)
+          .y1((p) => p.high);
+
+      svgPays.append("path")
+          .attr("d", Gen(data))
+          .attr("fill", color)
+          .attr("id","pathToDelete");
+    } 
+
+    // Deuxième visualisation pour le pays
+    //Code pour le slider
+    var sliderTime = d3
+        .sliderHorizontal()
+        .min(d3.min(anneeY))
+        .max(d3.max(anneeY))
+        .step(1)
+        .width(500)
+        .tickValues(anneeY)
+        .default(d3.min(anneeY))
+        .on('onchange', val => {
+            graphPays(val);
+        });
+
+    var gTime = d3
+        .select('div#slider-time')
+        .append('svg')
+        .attr('width', 900)
+        .attr('height', 100)
+        .append('g')
+        .attr('transform', 'translate(30,30)');
+
+    gTime.call(sliderTime);
+
+    //Création des labels pour l'axe y
+    let labelShort = [
+            "",
+            "EE_LHA", //EE_LHA
+            "EE_SHA", //EE_SHA
+            "EE_ITT", //EE_ITT
+            "EE_CPV_CON", //EE_CPV_CON
+            "EE_TLS", //EE_TLS
+            "TOTAL", //TOTAL
+            " ",
+        ];
+
+    //Définition de la taille
+    heightPS = 600;
+    widthPS = 900;
+
+    var svgPaysSimple = d3
+            .select("#visuPaysSimple")
+            .append("svg")
+            .attr("width", widthPS)
+            .attr("height", heightPS);
+
+    graphPays('2005'); //On se place en France en 2005 par défaut
+
+    //Fonction de création de la deuxième visualisation
+    function graphPays(anneeCourante){
+        svgPaysSimple.selectAll('*').remove(); //On enlève les valeurs précédentes
+        var paysActuel = d3.select("#namePays").property("value");
+
+        // Création des axes
+        d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
+            var dataPays = {
+                'EE_LHA': 0.0, 
+                'EE_SHA': 0.0,
+                'EE_ITT': 0.0,
+                'EE_CPV_CON': 0.0,
+                'EE_TLS': 0.0,
+                'TOTAL' : 0.0};
+            for (var i = 0; i < csvdata.length; i++) {
+                if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && csvdata[i].wst_oper == "COL" ){
+                    //dataPays[csvdata[i].wst_oper] = ;
+                    switch (String(anneeCourante)) { //On vérifie l'année actuellement selectionnée
+                        case '2005':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2005;
+                            break;
+                        case '2006':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2006;
+                            break;
+                        case '2007':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2007;
+                            break;
+                        case '2008':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2008;
+                            break;
+                        case '2009':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2009;
+                            break;
+                        case '2010':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2010;
+                            break;
+                        case '2011':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2011;
+                            break;
+                        case '2012':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2012;
+                            break;
+                        case '2013':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2013;
+                            break;
+                        case '2014':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2014;
+                            break;
+                        case '2015':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2015;
+                            break;
+                        case '2016':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2016;
+                            break;
+                        case '2017':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2017;
+                            break;
+                        case '2018':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2018;
+                            break;
+                        default:
+                            console.log(`Problème avec l'année'`);
+                        }
+                }
+            }
+            //Création des axes
+            var xsca = d3.scaleLinear()
+                .domain([0, d3.max(Object.values(dataPays))])
+                .range([0, widthPS - 100]);
+
+            var ysca = d3.scalePoint()
+                    .domain(labelShort)
+                    .range([heightPS/2, 0]);
+
+            var x_ax = d3.axisBottom()
+                    .scale(xsca);
+
+            var y_ax = d3.axisLeft()
+                    .scale(ysca);
+
+            svgPaysSimple.append("g")
+                .attr("transform", "translate(50, 10)")
+                .call(y_ax);
+
+            var xAxisTrans = heightPS/2 + 10;
+
+            svgPaysSimple.append("g")
+                        .attr("transform", "translate(50, " + xAxisTrans  +")")
+                        .call(x_ax);
+
+            //Dessin des cercles et des lignes
+            for(const key in dataPays){
+                drawLine(svgPaysSimple,50,xsca(dataPays[key]) + 50,ysca(key) + 10,ysca(key) + 10,'gray');
+                svgPaysSimple.append("circle")
+                    .attr("cx", xsca(dataPays[key]) + 50)
+                    .attr("cy", ysca(key) + 10)
+                    .attr("r", 8)
+                    .attr("fill", "steelblue");
+            }
+        });
+    }
+
     </script>
   </body>
 </html>
