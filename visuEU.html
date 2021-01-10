@@ -116,10 +116,13 @@
       <div id="foo">foo</div-->
       </div> 
       
+      <br>
+      <br>
       <!-- Visualisation par pays -->
       <div id="visu-pays">
         <div>
-            <h1 style="text-align: center;">Titre de la visualisation</h1>
+            <h1 style="text-align: center;" id="paysChoisi">Aucun pays sélectionné : France par défaut</h1>
+            <h3> Titre de la visu</h3>
         </div>
         <div class="container">
             <h3> Légende </h3>
@@ -264,10 +267,12 @@
         .attr("class", "pathhidden")
         .on('click',function(event,d){
           var name = d.properties.iso_a2;
+          var longname = d.properties.name_sort;
           if(name == "-99"){
             name = "FR";
           }
           changeDataCountry(name);
+          changeTitleName(longname);
         })
 				//tooltip modif
 				.on('mouseover', function(event, d) {
@@ -454,6 +459,11 @@
         .style("font-size", 13);
             
     changeDataCountry("FR");
+
+    function changeTitleName(name){
+      d3.select("#paysChoisi")
+        .text("Pays sélectionné : " + name);
+    }
 
     function clearGraph(svgPays){
       svgPays.selectAll('circle').remove();
