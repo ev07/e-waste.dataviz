@@ -752,6 +752,7 @@
 
     gTime.call(sliderTime);
 
+    //Création des labels pour l'axe y
     let labelShort = [
             "",
             "EE_LHA", //EE_LHA
@@ -763,6 +764,7 @@
             " ",
         ];
 
+    //Définition de la taille
     heightPS = 600;
     widthPS = 900;
 
@@ -772,10 +774,11 @@
             .attr("width", widthPS)
             .attr("height", heightPS);
 
-    graphPays('2005');
+    graphPays('2005'); //On se place en France en 2005 par défaut
 
+    //Fonction de création de la deuxième visualisation
     function graphPays(anneeCourante){
-        svgPaysSimple.selectAll('*').remove();
+        svgPaysSimple.selectAll('*').remove(); //On enlève les valeurs précédentes
         var paysActuel = d3.select("#namePays").property("value");
 
         // Création des axes
@@ -790,7 +793,7 @@
             for (var i = 0; i < csvdata.length; i++) {
                 if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && csvdata[i].wst_oper == "COL" ){
                     //dataPays[csvdata[i].wst_oper] = ;
-                    switch (String(anneeCourante)) { //On vérifie le type du déchet pour l'afficher au bon endroit
+                    switch (String(anneeCourante)) { //On vérifie l'année actuellement selectionnée
                         case '2005':
                             dataPays[csvdata[i].waste] = csvdata[i].y2005;
                             break;
@@ -838,7 +841,7 @@
                         }
                 }
             }
-
+            //Création des axes
             var xsca = d3.scaleLinear()
                 .domain([0, d3.max(Object.values(dataPays))])
                 .range([0, widthPS - 100]);
@@ -863,6 +866,7 @@
                         .attr("transform", "translate(50, " + xAxisTrans  +")")
                         .call(x_ax);
 
+            //Dessin des cercles et des lignes
             for(const key in dataPays){
                 drawLine(svgPaysSimple,50,xsca(dataPays[key]) + 50,ysca(key) + 10,ysca(key) + 10,'gray');
                 svgPaysSimple.append("circle")
