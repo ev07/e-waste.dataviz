@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
@@ -132,6 +133,18 @@
         </div>
         <div id="visuPays">
 
+        </div>
+        <!-- Deuxième visu pour le pays-->
+        <div>
+            <h3>Titre de la visu</h3>
+            <h4>Choix de l'année</h4>
+            <div>
+                <div class="col-sm"><div id="slider-time"></div></div>
+            </div>
+            <input id="namePays" type="hidden" value="FR">
+            <div id="visuPaysSimple">
+
+            </div>
         </div>
       </div> 
 		</div> 
@@ -271,8 +284,10 @@
           if(name == "-99"){
             name = "FR";
           }
-          changeDataCountry(name);
           changeTitleName(longname);
+          changeDataCountry(name);
+          d3.select("#namePays").attr("value",name);
+          graphPays('2005');
         })
 				//tooltip modif
 				.on('mouseover', function(event, d) {
@@ -365,7 +380,8 @@
     
 
     // VISUALISATION PAR PAYS
-     // Création de la légende
+    // Première visualisation
+    // Création de la légende
     var svgLeg = d3.select('#legendeVisu')
                     .append('svg')
                     .attr("width",900)
@@ -382,7 +398,7 @@
         .attr("y",15)
         .text("Déchets produits");
 
-    svgLeg.append('rect')
+    svgLeg.append('rect') 
         .attr("x",200)
         .attr("y",0)
         .attr("width",20)
@@ -404,7 +420,7 @@
 
     // Définition de la taille
     var widthPays = 900,
-        heightPays = 900;
+        heightPays = 800;
 
     //On définit les labels
     var anneeY = ["2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018"];
@@ -711,6 +727,153 @@
           .attr("fill", color)
           .attr("id","pathToDelete");
     } 
+
+    // Deuxième visualisation pour le pays
+    //Code pour le slider
+    var sliderTime = d3
+        .sliderHorizontal()
+        .min(d3.min(anneeY))
+        .max(d3.max(anneeY))
+        .step(1)
+        .width(500)
+        .tickValues(anneeY)
+        .default(d3.min(anneeY))
+        .on('onchange', val => {
+            graphPays(val);
+        });
+
+    var gTime = d3
+        .select('div#slider-time')
+        .append('svg')
+        .attr('width', 900)
+        .attr('height', 100)
+        .append('g')
+        .attr('transform', 'translate(30,30)');
+
+    gTime.call(sliderTime);
+
+    let labelShort = [
+            "",
+            "EE_LHA", //EE_LHA
+            "EE_SHA", //EE_SHA
+            "EE_ITT", //EE_ITT
+            "EE_CPV_CON", //EE_CPV_CON
+            "EE_TLS", //EE_TLS
+            "TOTAL", //TOTAL
+            " ",
+        ];
+
+    heightPS = 600;
+    widthPS = 900;
+
+    var svgPaysSimple = d3
+            .select("#visuPaysSimple")
+            .append("svg")
+            .attr("width", widthPS)
+            .attr("height", heightPS);
+
+    graphPays('2005');
+
+    function graphPays(anneeCourante){
+        svgPaysSimple.selectAll('*').remove();
+        var paysActuel = d3.select("#namePays").property("value");
+
+        // Création des axes
+        d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
+            var dataPays = {
+                'EE_LHA': 0.0, 
+                'EE_SHA': 0.0,
+                'EE_ITT': 0.0,
+                'EE_CPV_CON': 0.0,
+                'EE_TLS': 0.0,
+                'TOTAL' : 0.0};
+            for (var i = 0; i < csvdata.length; i++) {
+                if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && csvdata[i].wst_oper == "COL" ){
+                    //dataPays[csvdata[i].wst_oper] = ;
+                    switch (String(anneeCourante)) { //On vérifie le type du déchet pour l'afficher au bon endroit
+                        case '2005':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2005;
+                            break;
+                        case '2006':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2006;
+                            break;
+                        case '2007':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2007;
+                            break;
+                        case '2008':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2008;
+                            break;
+                        case '2009':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2009;
+                            break;
+                        case '2010':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2010;
+                            break;
+                        case '2011':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2011;
+                            break;
+                        case '2012':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2012;
+                            break;
+                        case '2013':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2013;
+                            break;
+                        case '2014':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2014;
+                            break;
+                        case '2015':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2015;
+                            break;
+                        case '2016':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2016;
+                            break;
+                        case '2017':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2017;
+                            break;
+                        case '2018':
+                            dataPays[csvdata[i].waste] = csvdata[i].y2018;
+                            break;
+                        default:
+                            console.log(`Problème avec l'année'`);
+                        }
+                }
+            }
+
+            var xsca = d3.scaleLinear()
+                .domain([0, d3.max(Object.values(dataPays))])
+                .range([0, widthPS - 100]);
+
+            var ysca = d3.scalePoint()
+                    .domain(labelShort)
+                    .range([heightPS/2, 0]);
+
+            var x_ax = d3.axisBottom()
+                    .scale(xsca);
+
+            var y_ax = d3.axisLeft()
+                    .scale(ysca);
+
+            svgPaysSimple.append("g")
+                .attr("transform", "translate(50, 10)")
+                .call(y_ax);
+
+            var xAxisTrans = heightPS/2 + 10;
+
+            svgPaysSimple.append("g")
+                        .attr("transform", "translate(50, " + xAxisTrans  +")")
+                        .call(x_ax);
+
+            for(const key in dataPays){
+                drawLine(svgPaysSimple,50,xsca(dataPays[key]) + 50,ysca(key) + 10,ysca(key) + 10,'gray');
+                svgPaysSimple.append("circle")
+                    .attr("cx", xsca(dataPays[key]) + 50)
+                    .attr("cy", ysca(key) + 10)
+                    .attr("r", 8)
+                    .attr("fill", "steelblue");
+            }
+        });
+    }
+
     </script>
   </body>
 </html>
