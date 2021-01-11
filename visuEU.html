@@ -760,6 +760,13 @@
 
     gTime.call(sliderTime);
 
+    // Création d'un tooltip
+    var tooltipPaysSimple = d3
+        .select("#visuPaysSimple")
+        .append("div")
+        .attr("class", "hidden tooltip")
+        .attr("id","tooltipPays");
+
     //Création des labels pour l'axe y
     let labelShort = [
             "",
@@ -895,7 +902,27 @@
                     .attr("cx", xsca(dataPays[key]) + 50)
                     .attr("cy", ysca(key) + 10)
                     .attr("r", 8)
-                    .attr("fill", "steelblue");
+                    .attr("fill", "steelblue")
+                    .on("mousemove", function (event, d) {
+                        // on recupere la position de la souris
+                        var mousePosition = d3.pointer(event, this);
+                        //var svgPos = getNodePos(svgPaysSimple)
+                        // on affiche le toolip
+                        tooltipPaysSimple
+                            .classed("hidden", false)
+                            .attr(
+                            "style",
+                            "left:" +
+                                (mousePosition[0] + 15) +
+                                "px; top:" +
+                                (mousePosition[1] - 35) +
+                                "px"
+                            )
+                            .html(dataPays[key] + " kg/hab produit");
+                    })
+                    .on("mouseout", function () { // on cache le toolip
+                      tooltipPaysSimple.classed("hidden", true);
+                    });
             }
         });
     }
