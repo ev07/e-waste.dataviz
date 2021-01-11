@@ -110,6 +110,14 @@
             MakeHist()                        
                         
             });
+
+            function getNodePos(el){
+                var body = d3.select('body').node();
+                for (var lx = 0, ly = 0;
+                    el != null && el != body;
+                    lx += (el.offsetLeft || el.clientLeft), ly += (el.offsetTop || el.clientTop), el = (el.offsetParent || el.parentNode));
+                    return {x: lx, y: ly};
+			}
             
 
             function MakeHist(){
@@ -145,6 +153,7 @@
                     }
                     console.log(cpt_row+" lignes trouvés")
                     
+                    /* Creation d'un nouveau dict approprié pour l'histogramme */
                     for (var key in dict) {         
                         if (dict[key] > max ){
                             max = dict[key];
@@ -180,19 +189,36 @@
                         .call(d3.axisLeft(y));
 
                     // Bars
+                    var tooltip = d3.select('#chart').append('div').attr('class', 'hidden tooltip');
                     
                     var bar = svg.selectAll("mybar")
                     .data(yearTonne)
                     .enter()
                     .append("rect")
-                        .attr("x", function(d) { return x(d.year); })
-                        .attr("y", function(d) { return y(d.value); })
-                        .attr("width", x.bandwidth())
-                        .attr("height", function(d) { return height - y(d.value); })
-                        .attr("fill", "#FF5733")
-                    
-                }
-            )}
+                    .attr("x", function(d) { return x(d.year); })
+                    .attr("y", function(d) { return y(d.value); })
+                    .attr("width", x.bandwidth())
+                    .attr("height", function(d) { return height - y(d.value); })
+                    .attr("fill", "#FF5733")
+                    .text("Value vs Date Graph")
+                    .on("mousemove", function(event,d){
+                        var mousePosition = d3.pointer(event);
+					    var svgPosition = getNodePos(d3.select("svg").node())
+					    //récupérer la quantité
+					    var val = d.value
+					    //modifier le tooltip
+					    tooltip.classed("hidden", false)
+                        .attr("style",
+                            "left:" +
+                            (mousePosition[0] + svgPosition.x + 15) +
+                                            "px; top:" +
+                            (mousePosition[1] + svgPosition.y + 10) +
+                                                "px; opacity: 1")
+                        .html(val + " tonnes");
+                })
+                    .on("mouseout", function(d){ tooltip.style("display", "none");})      
+                        }
+                    )}
 
         MakeHist();
         </script>
