@@ -16,7 +16,7 @@
         <ul class="nav navbar-nav">
           <li><a href="index.html">Accueil</a></li>
           <li class="active"><a href="visuEU.html">Visualisation</a></li>
-          <li><a href="about.html">A propos</a></li>          
+          <li><a href="about.html">A propos</a></li>
         </ul>
       </div>
     </nav>
@@ -36,10 +36,10 @@
 					il faut cliquer sur le pays d'intérêt sur la carte.
 				</p>
 			</div>
-		
+
 		  <div class="wrapper">
 			<!--Déclaration des radiobutton-->
-		
+
 			<div class="Selectioncontainer">
 				<p>Choisissez le type de déchet :</p>
 				<div>
@@ -73,7 +73,7 @@
 					<input type="radio" id="EE_TLS" name="ProductType" value="EE_TLS" />
 					<label for="EE_TLS"> Jouets, équipements de loisirs et de sport</label>
 				</div>
-		
+
 				<p>Choisissez l'étape du traitement:</p>
 				<div>
 					<input type="radio" id="MKT" name="ProductStep" value="MKT" checked />
@@ -98,10 +98,10 @@
 					<label for="REU"> Quantité réparée et réutilisée</label>
 				</div>
 			</div>
-		
+
 			<div class="Mapcontainer"></div>
 			<div class="Graphcontainer"></div>
-		
+
 			<!--div pour mettre l'explication de sélection-->
 			<div class="Explanationcontainer">
 				<h3>Produits concernés : </h3>
@@ -115,8 +115,8 @@
 			</div>
 			<!--div pour voir si le lien marche>
       <div id="foo">foo</div-->
-      </div> 
-      
+      </div>
+
       <br>
       <br>
       <!-- Visualisation par pays -->
@@ -146,9 +146,9 @@
 
             </div>
         </div>
-      </div> 
-		</div> 
-		
+      </div>
+		</div>
+
     <script>
       // VISUALISATION DE L'EUROPE
 
@@ -173,7 +173,7 @@
 		d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
 		d3.json("https://ev07.github.io/e-waste.dataviz/data/european-union-countries.geojson").then(function (jsondata) {
 		d3.json("https://ev07.github.io/e-waste.dataviz/data/explanation.json").then(function (expldata) {
-      
+
 
     var waste = d3
       .select('input[name="ProductType"]:checked')
@@ -183,7 +183,7 @@
       .property("value");
 		var year = "2017";
     var unit = "KG_HAB";
-		
+
 
 		// fonction qui modifie la valeur de mydisplayvalue avec la valeur en cours pour chaque pays
 		function updatedisplayvalue() {
@@ -205,7 +205,7 @@
 			}
 			return curr;
 		}
-		
+
 		//ajouter une attribut mydisplayvalue au geojson
 		updatedisplayvalue();
 
@@ -237,7 +237,7 @@
       .scaleQuantize()
       .range(["#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
 			.domain([0,maxdisplayvalue()]);
-		
+
     function getfillingmap(d) {
 			//on prend la valeur recuperee plus haut
 			var value = d.properties.mydisplayvalue;
@@ -248,7 +248,7 @@
         return "#ccc";
       }
 		}
-			
+
 
       //polygones principaux
       var polyprincipaux = g.selectAll("path")
@@ -269,7 +269,7 @@
 
       //polygones transparents pour le réhaussement de contours
       //ajout d'un lien vers la visu par pays
-      
+
 			g.selectAll("pathh")
         .data(jsondata.features)
         .enter()
@@ -287,13 +287,13 @@
           changeTitleName(longname);
           changeDataCountry(name);
           d3.select("#namePays").attr("value",name);
-          graphPays('2005');
+          sliderTime.value("2005");
         })
 				//tooltip modif
 				.on('mouseover', function(event, d) {
           var mousePosition = d3.pointer(event);
 					var svgPosition = getNodePos(d3.select("svg").node())
-          
+
 					//récupérer la quantité
 					var val = d.properties.mydisplayvalue
 
@@ -326,12 +326,12 @@
       .attr("width", Gwidth)
       .attr("height", Gheight)
 			.style("background-color", "green"); //juste pour voir
-		
-		
+
+
 		//
 		// PARTIE UPDATE AU CHANGEMENT DE CATEGORIE
     //
-			
+
 		console.log(jsondata.features[0]);
 		d3.selectAll("input[name='ProductType']").on("change", function (event) {
         //update variable de type
@@ -355,7 +355,7 @@
 			  }
 
 			});
-			
+
 
       d3.selectAll("input[name='ProductStep']").on("change", function (event) {
         //update variable d'opération
@@ -370,14 +370,14 @@
 				updatedisplayvalue();
 				//update color scale
 				color.domain([0,maxdisplayvalue()]);
-				
+
       });
 
-		
+
     });//fin du chargement du explanation
 	  });//fin du chargement du geojson
     });//fin du chargement du csv
-    
+
 
     // VISUALISATION PAR PAYS
     // Première visualisation
@@ -392,19 +392,19 @@
           .attr("width",20)
           .attr("height",20)
           .attr("fill","#d53e4f");
-            
+
     svgLeg.append('text')
         .attr("x",25)
         .attr("y",15)
         .text("Déchets produits");
 
-    svgLeg.append('rect') 
+    svgLeg.append('rect')
         .attr("x",200)
         .attr("y",0)
         .attr("width",20)
         .attr("height",20)
         .attr("fill","lightGreen");
-            
+
     svgLeg.append('text')
         .attr("x",225)
         .attr("y",15)
@@ -474,7 +474,7 @@
         .attr("transform", "translate(-10,10)rotate(-45)")
         .style("text-anchor", "end")
         .style("font-size", 13);
-            
+
     changeDataCountry("FR");
 
     function changeTitleName(name){
@@ -543,7 +543,7 @@
                         drawQuad(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,'lightGreen');
                     }
 
-                    //On colorie la surface pour les déchets produits 
+                    //On colorie la surface pour les déchets produits
                     if(csvdata[i].wst_oper == "MKT"){
                         drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2005),eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[0]) + 10,yscale(anneeY[1]) + 10,"#d53e4f");
                         drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2006),eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[1]) + 10,yscale(anneeY[2]) + 10,"#d53e4f");
@@ -560,7 +560,7 @@
                         drawQuadInv(svgPays,eval(xscale(valX) + 50),eval(xscale(valX) + 50 + op + csvdata[i].y2017),eval(xscale(valX) + 50 + op + csvdata[i].y2018),yscale(anneeY[12]) + 10,yscale(anneeY[13]) + 10,"#d53e4f");
                     }
 
-                    // On dessine les points 
+                    // On dessine les points
                     appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2005,eval(xscale(valX) + 50 + op + csvdata[i].y2005),yscale(anneeY[0]) + 10 );
                     appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2006,eval(xscale(valX) + 50 + op + csvdata[i].y2006),yscale(anneeY[1]) + 10);
                     appendCircle(svgPays,csvdata[i].wst_oper,csvdata[i].y2007,eval(xscale(valX) + 50 + op + csvdata[i].y2007),yscale(anneeY[2]) + 10);
@@ -687,7 +687,7 @@
         .attr("d", Gen(data))
         .attr("fill", color)
         .attr("id","pathToDelete");
-    } 
+    }
 
     function drawQuadInv(svgPays,x1,x2,x3,y1,y2,color){
       if(x3 == x1){
@@ -726,7 +726,7 @@
           .attr("d", Gen(data))
           .attr("fill", color)
           .attr("id","pathToDelete");
-    } 
+    }
 
     // Deuxième visualisation pour le pays
     //Code pour le slider
@@ -737,6 +737,7 @@
         .step(1)
         .width(500)
         .tickValues(anneeY)
+        .tickFormat(function(n) {return n})
         .default(d3.min(anneeY))
         .on('onchange', val => {
             graphPays(val);
@@ -784,7 +785,7 @@
         // Création des axes
         d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
             var dataPays = {
-                'EE_LHA': 0.0, 
+                'EE_LHA': 0.0,
                 'EE_SHA': 0.0,
                 'EE_ITT': 0.0,
                 'EE_CPV_CON': 0.0,
