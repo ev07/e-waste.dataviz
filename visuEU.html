@@ -370,7 +370,13 @@
 				updatedisplayvalue();
 				//update color scale
 				color.domain([0,maxdisplayvalue()]);
-
+                //update map color
+				for (var i = 0; i < jsondata.features.length; i++) {
+				  polyprincipaux.filter(function (d) {
+					  return 0==0;
+					})
+					.style("fill", getfillingmap);
+			  }
       });
 
 

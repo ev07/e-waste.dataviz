@@ -16,7 +16,7 @@ html {
 }
 
 /* Style pour la visualisation par pays */
-#tooltipPays {
+.tooltip {
   color: #222;
   background-color: #fff;
   padding: 0.5em;
