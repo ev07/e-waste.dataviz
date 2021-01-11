@@ -138,9 +138,20 @@
                 <div class="col-sm"><div id="slider-time"></div></div>
             </div>
             <input id="namePays" type="hidden" value="FR">
-            <div id="visuPaysSimple">
+            <div class="row">
+                <div class="col-sm-9" id="visuPaysSimple">
 
+                </div>
+                <div class="col-sm-3"> 
+                  <h3>Légende</h3>
+                  <p> EE_TLS : Jouets, équipements de loisirs et de sport</p>
+                  <p> EE_CPV_CON : Matériel grand public</p>
+                  <p> EE_ITT : Equipements informatiques et de télécommunications</p>
+                  <p> EE_SHA : Petits appareils ménagers</p>
+                  <p> EE_LHA : Gros appareils ménagers</p>
+                </div>
             </div>
+            
         </div>
       </div>
 		</div>
@@ -862,6 +873,13 @@
             svgPaysSimple.append("g")
                         .attr("transform", "translate(50, " + xAxisTrans  +")")
                         .call(x_ax);
+
+            svgPaysSimple.append("text")
+              .attr("class", "x label")
+              .attr("text-anchor", "end")
+              .attr("x", widthPS / 2 + 100)
+              .attr("y", heightPS - 250)
+              .text("Quantité de déchets produits en kg/hab");
 
             //Dessin des cercles et des lignes
             for(const key in dataPays){
