@@ -779,6 +779,7 @@
     var svgPaysSimple = d3
             .select("#visuPaysSimple")
             .append("svg")
+            .attr("id","svgPaysSimple")
             .attr("width", widthPS)
             .attr("height", heightPS);
 
@@ -799,7 +800,7 @@
                 'EE_TLS': 0.0,
                 'TOTAL' : 0.0};
             for (var i = 0; i < csvdata.length; i++) {
-                if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && csvdata[i].wst_oper == "COL" ){
+                if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && csvdata[i].wst_oper == "MKT" ){
                     //dataPays[csvdata[i].wst_oper] = ;
                     switch (String(anneeCourante)) { //On vérifie l'année actuellement selectionnée
                         case '2005':
@@ -849,9 +850,15 @@
                         }
                 }
             }
+            var values = [];
+            var k = 0;
+            for(const key in dataPays){
+              values[k] = Number(dataPays[key]);
+              k++;
+            }
             //Création des axes
             var xsca = d3.scaleLinear()
-                .domain([0, d3.max(Object.values(dataPays))])
+                .domain([0, d3.max(values)])
                 .range([0, widthPS - 100]);
 
             var ysca = d3.scalePoint()
