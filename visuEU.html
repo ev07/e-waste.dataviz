@@ -317,10 +317,9 @@
 								  "px; top:" +
                  (mousePosition[1] + svgPosition.y + 10) +
 									"px; opacity: 1")
-            .html(function (d) {
-                var value = d.properties.mydisplayvalue;
-                if (value) {
-                    return value + " kg/hab";
+            .html(function () {
+                if (val) {
+                    return val + " kg/hab";
                 } else {
                     // si pas de valeur alors en gris
                     return "inconnu";
