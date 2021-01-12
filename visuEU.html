@@ -624,7 +624,13 @@
         .append("circle")
         .attr("cx", cx)
         .attr("cy", cy)
-        .attr("r", 3)
+        .attr("r", 3);
+      svgPays
+        .append("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", 10)
+        .attr("opacity",0)
         .on("mousemove", function (event, d) {
             // on recupere la position de la souris
             var mousePosition = d3.pointer(event, this);
