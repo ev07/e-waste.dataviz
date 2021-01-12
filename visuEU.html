@@ -32,7 +32,8 @@
 			</div>
 			<div class="Explanationcontainer">
 				<p>
-					Il est possible de visualiser les indicateurs pour chaque pays. Pour cela,
+					Carte représentant les quantités de déchets produits/collectés/recyclés par les pays de l'UE en 2017. Le type de déchet électronique produit ainsi que l'étape du cycle de vie du produit est sélectionnable. Affiché en kg par habitant. <br>
+					Il est possible de visualiser des indicateurs plus précis pour chaque pays. Pour cela,
 					il faut cliquer sur le pays d'intérêt sur la carte.
 				</p>
 			</div>
@@ -297,7 +298,7 @@
           sliderTime.value("2005");
         })
 				//tooltip modif
-				.on('mouseover', function(event, d) {
+				.on('mousemove', function(event, d) {
           var mousePosition = d3.pointer(event);
 					var svgPosition = getNodePos(d3.select("svg").node())
 
