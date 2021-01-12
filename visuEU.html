@@ -28,7 +28,7 @@
 
       <!-- Visualisation de l'Europe -->
       <div class="Titlecontainer">
-				<h1>Titre introductif</h1>
+				<h1>Disparités européennes de traitement des déchets électroniques</h1>
 			</div>
 			<div class="Explanationcontainer">
 				<p>
@@ -119,7 +119,7 @@
       <div id="visu-pays">
         <div>
             <h1 style="text-align: center;" id="paysChoisi">Aucun pays sélectionné : France par défaut</h1>
-            <h3> Titre de la visu</h3>
+            <h3> Production et collection de déchets électroniques</h3>
         </div>
         <div class="container">
             <h3> Légende </h3>
@@ -132,15 +132,26 @@
         </div>
         <!-- Deuxième visu pour le pays-->
         <div>
-            <h3>Titre de la visu</h3>
+            <h3>Production de déchets électroniques par année</h3>
             <h4>Choix de l'année</h4>
             <div>
                 <div class="col-sm"><div id="slider-time"></div></div>
             </div>
             <input id="namePays" type="hidden" value="FR">
-            <div id="visuPaysSimple">
+            <div class="row">
+                <div class="col-sm-9" id="visuPaysSimple">
 
+                </div>
+                <div class="col-sm-3"> 
+                  <h3>Légende</h3>
+                  <p> EE_TLS : Jouets, équipements de loisirs et de sport</p>
+                  <p> EE_CPV_CON : Matériel grand public</p>
+                  <p> EE_ITT : Equipements informatiques et de télécommunications</p>
+                  <p> EE_SHA : Petits appareils ménagers</p>
+                  <p> EE_LHA : Gros appareils ménagers</p>
+                </div>
             </div>
+            
         </div>
       </div>
 		</div>
@@ -755,6 +766,13 @@
 
     gTime.call(sliderTime);
 
+    // Création d'un tooltip
+    var tooltipPaysSimple = d3
+        .select("#visuPaysSimple")
+        .append("div")
+        .attr("class", "hidden tooltip")
+        .attr("id","tooltipPays");
+
     //Création des labels pour l'axe y
     let labelShort = [
             "",
@@ -774,6 +792,7 @@
     var svgPaysSimple = d3
             .select("#visuPaysSimple")
             .append("svg")
+            .attr("id","svgPaysSimple")
             .attr("width", widthPS)
             .attr("height", heightPS);
 
@@ -794,7 +813,7 @@
                 'EE_TLS': 0.0,
                 'TOTAL' : 0.0};
             for (var i = 0; i < csvdata.length; i++) {
-                if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && csvdata[i].wst_oper == "COL" ){
+                if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && csvdata[i].wst_oper == "MKT" ){
                     //dataPays[csvdata[i].wst_oper] = ;
                     switch (String(anneeCourante)) { //On vérifie l'année actuellement selectionnée
                         case '2005':
@@ -844,9 +863,15 @@
                         }
                 }
             }
+            var values = [];
+            var k = 0;
+            for(const key in dataPays){
+              values[k] = Number(dataPays[key]);
+              k++;
+            }
             //Création des axes
             var xsca = d3.scaleLinear()
-                .domain([0, d3.max(Object.values(dataPays))])
+                .domain([0, d3.max(values)])
                 .range([0, widthPS - 100]);
 
             var ysca = d3.scalePoint()
@@ -869,6 +894,13 @@
                         .attr("transform", "translate(50, " + xAxisTrans  +")")
                         .call(x_ax);
 
+            svgPaysSimple.append("text")
+              .attr("class", "x label")
+              .attr("text-anchor", "end")
+              .attr("x", widthPS / 2 + 100)
+              .attr("y", heightPS - 250)
+              .text("Quantité de déchets produits en kg/hab");
+
             //Dessin des cercles et des lignes
             for(const key in dataPays){
                 drawLine(svgPaysSimple,50,xsca(dataPays[key]) + 50,ysca(key) + 10,ysca(key) + 10,'gray');
@@ -876,7 +908,27 @@
                     .attr("cx", xsca(dataPays[key]) + 50)
                     .attr("cy", ysca(key) + 10)
                     .attr("r", 8)
-                    .attr("fill", "steelblue");
+                    .attr("fill", "steelblue")
+                    .on("mousemove", function (event, d) {
+                        // on recupere la position de la souris
+                        var mousePosition = d3.pointer(event, this);
+                        //var svgPos = getNodePos(svgPaysSimple)
+                        // on affiche le toolip
+                        tooltipPaysSimple
+                            .classed("hidden", false)
+                            .attr(
+                            "style",
+                            "left:" +
+                                (mousePosition[0] + 15) +
+                                "px; top:" +
+                                (mousePosition[1] - 35) +
+                                "px"
+                            )
+                            .html(dataPays[key] + " kg/hab produit");
+                    })
+                    .on("mouseout", function () { // on cache le toolip
+                      tooltipPaysSimple.classed("hidden", true);
+                    });
             }
         });
     }
