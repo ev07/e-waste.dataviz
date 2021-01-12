@@ -70,3 +70,20 @@ html {
   grid-column: 4;
           grid-row: 1;
 }
+
+/* Style pour l'annexe hist */
+#chart{
+  margin: auto;
+  width: 65%;
+}
+
+#ychart{
+  margin-left: 22%;
+  font-weight: bold;
+}
+
+#legendChart{
+  font-size: 20px;
+  margin-left: 38%;
+  font-weight: bold;
+}
