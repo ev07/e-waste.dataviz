@@ -26,6 +26,18 @@ html {
   position: absolute;
 }
 
+#visu-pays{
+  border-left: 2px dotted gray;
+  grid-column: 2;
+  grid-row: 1;
+  padding-left: 5px;
+}
+
+#visuEurope{
+  grid-column: 1;
+  grid-row: 1;
+}
+
 /* Style pour la visualisation de l'Europe */
 .polygon {
   stroke: rgb(138, 138, 138);
@@ -43,47 +55,31 @@ html {
   display: none;
 }
 .wrapper {
-    display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 .Titlecontainer {
   display: flex;
   justify-content: center;
 }
-.Explanationcontainer {
-    padding: 5px;
-  grid-column: 3;
-      grid-row: 1;
-}
 .Selectioncontainer {
   padding: 5px;
-  grid-column: 1;
-        grid-row: 1;
   border-style: solid;
           border-width: 1px;
-}
-.Mapcontainer {
-  grid-column: 2;
-          grid-row: 1;
-}
-.Graphcontainer {
-  grid-column: 4;
-          grid-row: 1;
 }
 
 /* Style pour l'annexe hist */
 #chart{
   margin: auto;
-  width: 65%;
 }
 
 #ychart{
-  margin-left: 22%;
   font-weight: bold;
 }
 
 #legendChart{
   font-size: 20px;
-  margin-left: 38%;
+  text-align: center;
   font-weight: bold;
 }
+

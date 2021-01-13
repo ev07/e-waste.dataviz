@@ -21,145 +21,145 @@
       </div>
     </nav>
     <div class="container-fluid main">
-      <!--h1>Visu</h1>
-      <a href="wipEU.html">
-        <h3>Visu provisoire pour l'EU</h3>
-      </a-->
-
-      <!-- Visualisation de l'Europe -->
-      <div class="Titlecontainer">
-				<h1>Disparités européennes de traitement des déchets électroniques</h1>
-			</div>
-			<div class="Explanationcontainer">
-				<p>
-					Carte représentant les quantités de déchets produits/collectés/recyclés par les pays de l'UE en 2017. Le type de déchet électronique produit ainsi que l'étape du cycle de vie du produit est sélectionnable. Affiché en kg par habitant. <br>
-					Il est possible de visualiser des indicateurs plus précis pour chaque pays. Pour cela,
-					il faut cliquer sur le pays d'intérêt sur la carte.
-				</p>
-			</div>
-
-		  <div class="wrapper">
-			<!--Déclaration des radiobutton-->
-
-			<div class="Selectioncontainer">
-				<p>Choisissez le type de déchet :</p>
-				<div>
-					<input type="radio" id="TOTAL" name="ProductType" value="TOTAL" checked />
-					<label for="TOTAL">Total</label>
-				</div>
-				<div>
-					<input type="radio" id="EE_LHA" name="ProductType" value="EE_LHA" />
-					<label for="EE_LHA">Gros appareils ménagers</label>
-				</div>
-				<div>
-					<input type="radio" id="EE_SHA" name="ProductType" value="EE_SHA" />
-					<label for="EE_SHA">Petits appareils ménagers</label>
-				</div>
-				<div>
-					<input type="radio" id="EE_ITT" name="ProductType" value="EE_ITT" />
-					<label for="EE_ITT">
-						Equipements informatiques et de télécommunications
-					</label>
-				</div>
-				<div>
-					<input
-						type="radio"
-						id="EE_CPV_CON"
-						name="ProductType"
-						value="EE_CPV_CON"
-					/>
-					<label for="EE_CPV_CON"> Matériel grand public </label>
-				</div>
-				<div>
-					<input type="radio" id="EE_TLS" name="ProductType" value="EE_TLS" />
-					<label for="EE_TLS"> Jouets, équipements de loisirs et de sport</label>
-				</div>
-
-				<p>Choisissez l'étape du traitement:</p>
-				<div>
-					<input type="radio" id="MKT" name="ProductStep" value="MKT" checked />
-					<label for="MKT"> Quantité mise sur le marché</label>
-				</div>
-				<div>
-					<input type="radio" id="COL" name="ProductStep" value="COL" />
-					<label for="COL"> Quantité collectée comme déchêt</label>
-				</div>
-				<div>
-					<input type="radio" id="RCY_REU" name="ProductStep" value="RCY_REU" />
-					<label for="RCY_REU">
-						Quantité recyclée ou partiellement réutilisée</label
-					>
-				</div>
-				<div>
-					<input type="radio" id="REU" name="ProductStep" value="REU" />
-					<label for="REU"> Quantité réparée et réutilisée</label>
-				</div>
-			</div>
-
-			<div class="Mapcontainer"></div>
-			<div class="Graphcontainer"></div>
-
-			<!--div pour mettre l'explication de sélection-->
-			<div class="Explanationcontainer">
-				<h3>Produits concernés : </h3>
-				<div id="expltextdivtype">
-					Total toutes catégories
-				</div>
-				<h3>Etape de collection concernée :</h3>
-				<div id="expltextdivstep">
-					La quantité mise sur le marché est celle déclarée par les vendeurs et producteurs. A défaut, elle est estimée à partir de la balance commerciale Imports - Exports + Production domestique.
-				</div>
-			</div>
-			<!--div pour voir si le lien marche>
-      <div id="foo">foo</div-->
-      </div>
-      <br>
-      <!-- Histogramme annexe somme dechets collectés par types de catégories et d'opération par année -->
-      <div id="legendChart">Somme cumulée sur les pays de l'UE</div>
-      <div id="ychart">Tonnes</div>
-      <div id="chart"></div>
-      
-
-      <!-- Visualisation par pays -->
-      <div id="visu-pays">
-        <div>
-            <h1 style="text-align: center;" id="paysChoisi">Aucun pays sélectionné : France par défaut</h1>
-            <h3> Production et collection de déchets électroniques</h3>
+      <div class="container">
+        <div class="Titlecontainer">
+            <h1>Disparités européennes de traitement des déchets électroniques</h1>
         </div>
-        <div class="container">
-            <h3> Légende </h3>
-            <div id="legendeVisu">
-
-            </div>
+        <div class="Explanationcontainer">
+            <p>
+                Carte représentant les quantités de déchets produits/collectés/recyclés par les pays de l'UE en 2017. Le type de déchet électronique produit ainsi que l'étape du cycle de vie du produit est sélectionnable. Affiché en kg par habitant. <br>
+                Il est possible de visualiser des indicateurs plus précis pour chaque pays. Pour cela,
+                il faut cliquer sur le pays d'intérêt sur la carte.
+            </p>
         </div>
-        <div id="visuPays">
-
-        </div>
-        <!-- Deuxième visu pour le pays-->
-        <div>
-            <h3>Production de déchets électroniques par année</h3>
-            <h4>Choix de l'année</h4>
-            <div>
-                <div class="col-sm"><div id="slider-time"></div></div>
-            </div>
-            <input id="namePays" type="hidden" value="FR">
-            <div class="row">
-                <div class="col-sm-9" id="visuPaysSimple">
-
+        <!--Déclaration des radiobutton-->
+        <div class="Selectioncontainer container">
+            <div class="col col-lg-6"> 
+                <p>Choisissez le type de déchet :</p>
+                <div>
+                    <input type="radio" id="TOTAL" name="ProductType" value="TOTAL" checked />
+                    <label for="TOTAL">Total</label>
                 </div>
-                <div class="col-sm-3"> 
-                  <h3>Légende</h3>
-                  <p> EE_TLS : Jouets, équipements de loisirs et de sport</p>
-                  <p> EE_CPV_CON : Matériel grand public</p>
-                  <p> EE_ITT : Equipements informatiques et de télécommunications</p>
-                  <p> EE_SHA : Petits appareils ménagers</p>
-                  <p> EE_LHA : Gros appareils ménagers</p>
+                <div>
+                    <input type="radio" id="EE_LHA" name="ProductType" value="EE_LHA" />
+                    <label for="EE_LHA">Gros appareils ménagers</label>
+                </div>
+                <div>
+                    <input type="radio" id="EE_SHA" name="ProductType" value="EE_SHA" />
+                    <label for="EE_SHA">Petits appareils ménagers</label>
+                </div>
+                <div>
+                    <input type="radio" id="EE_ITT" name="ProductType" value="EE_ITT" />
+                    <label for="EE_ITT">
+                        Equipements informatiques et de télécommunications
+                    </label>
+                </div>
+                <div>
+                    <input
+                        type="radio"
+                        id="EE_CPV_CON"
+                        name="ProductType"
+                        value="EE_CPV_CON"
+                    />
+                    <label for="EE_CPV_CON"> Matériel grand public </label>
+                </div>
+                <div>
+                    <input type="radio" id="EE_TLS" name="ProductType" value="EE_TLS" />
+                    <label for="EE_TLS"> Jouets, équipements de loisirs et de sport</label>
                 </div>
             </div>
             
+            <div class="col col-lg-6"> 
+            <p>Choisissez l'étape du traitement:</p>
+            <div>
+                <input type="radio" id="MKT" name="ProductStep" value="MKT" checked />
+                <label for="MKT"> Quantité mise sur le marché</label>
+            </div>
+            <div>
+                <input type="radio" id="COL" name="ProductStep" value="COL" />
+                <label for="COL"> Quantité collectée comme déchêt</label>
+            </div>
+            <div>
+                <input type="radio" id="RCY_REU" name="ProductStep" value="RCY_REU" />
+                <label for="RCY_REU">
+                    Quantité recyclée ou partiellement réutilisée</label
+                >
+            </div>
+            <div>
+                <input type="radio" id="REU" name="ProductStep" value="REU" />
+                <label for="REU"> Quantité réparée et réutilisée</label>
+            </div>
+            </div>
+        </div>
+        <!-- Création du slider -->
+        <div id="slider" style="text-align: center;">
+            <h4>Choix de l'année</h4>
+            <div><div id="slider-time"></div></div>
+        </div>
+        <div class="wrapper">
+        <div id="visuEurope">
+            <!-- Visualisation de l'Europe -->
+            <div class="Explanationcontainer">
+                <h3>Produits concernés : </h3>
+                <div id="expltextdivtype">
+                    Total toutes catégories
+                </div>
+                <h3>Etape de collection concernée :</h3>
+                <div id="expltextdivstep">
+                    La quantité mise sur le marché est celle déclarée par les vendeurs et producteurs. A défaut, elle est estimée à partir de la balance commerciale Imports - Exports + Production domestique.
+                </div>
+            </div>
+            <div class="Mapcontainer"></div>
+            <hr style="height: 1px; color: gray; background-color: gray; width: 75%; border: none;">
+            <div class="Histo"> 
+                <!-- Histogramme annexe somme dechets collectés par types de catégories et d'opération par année -->
+                <div id="legendChart">Somme cumulée sur les pays de l'UE</div>
+                <div id="ychart">Tonnes</div>
+                <div id="chart"></div>
+            </div>
+        </div>
+        <div id="visu-pays">
+            <!-- Visualisation par pays-->
+            <div>
+                <h1 style="text-align: center;" id="paysChoisi">Aucun pays sélectionné : France par défaut</h1>
+                <h3> Production et collection de déchets électroniques</h3>
+            </div>
+            <h3> Légende </h3>
+            <div id="legendeVisu">
+    
+            </div>
+            <div id="visuPays">
+
+            </div>
+            <h3>Production de déchets électroniques par année</h3>
+            
+            <input id="namePays" type="hidden" value="FR">
+            <div  id="visuPaysSimple">
+
+            </div>
+            <div > 
+              <h3>Légende</h3>
+              <p> EE_TLS : Jouets, équipements de loisirs et de sport</p>
+              <p> EE_CPV_CON : Matériel grand public</p>
+              <p> EE_ITT : Equipements informatiques et de télécommunications</p>
+              <p> EE_SHA : Petits appareils ménagers</p>
+              <p> EE_LHA : Gros appareils ménagers</p>
+            </div>
+        </div>
         </div>
       </div>
-		</div>
+
+      <!-- Visualisation de l'Europe >
+		  <div class="wrapper">
+            <div class="Graphcontainer">
+                
+            </div>
+        </div-->
+			<!--div pour mettre l'explication de sélection-->
+			
+			<!--div pour voir si le lien marche>
+      <div id="foo">foo</div-->
+      
 
     <script>
       // VISUALISATION DE L'EUROPE
@@ -230,6 +230,7 @@
     var Msvg = d3
       .select(".Mapcontainer")
       .append("svg")
+      .attr("id","svgMap")
       .attr("width", Mwidth)
       .attr("height", Mheight);
 
@@ -286,7 +287,7 @@
         .data(jsondata.features)
         .enter()
         .append("a")
-        .attr("xlink:href", "#visu-pays")
+        //.attr("xlink:href", "#visu-pays")
         .append("path")
         .attr("d", path)
         .attr("class", "pathhidden")
@@ -304,7 +305,7 @@
 				//tooltip modif
 				.on('mousemove', function(event, d) {
           var mousePosition = d3.pointer(event);
-					var svgPosition = getNodePos(d3.select("svg").node())
+					var svgPosition = getNodePos(d3.select("#svgMap").node())
 
 					//récupérer la quantité
 					var val = d.properties.mydisplayvalue
@@ -411,10 +412,12 @@
     // VISUALISATION PAR PAYS
     // Première visualisation
     // Création de la légende
+    var widthLeg = 400;
+    var heightLeg = 30;
     var svgLeg = d3.select('#legendeVisu')
                     .append('svg')
-                    .attr("width",900)
-                    .attr("height", 30);
+                    .attr("width",widthLeg)
+                    .attr("height", heightLeg);
     svgLeg.append('rect')
           .attr("x",0)
           .attr("y",0)
@@ -428,14 +431,14 @@
         .text("Déchets produits");
 
     svgLeg.append('rect')
-        .attr("x",200)
+        .attr("x",widthLeg / 2)
         .attr("y",0)
         .attr("width",20)
         .attr("height",20)
         .attr("fill","lightGreen");
 
     svgLeg.append('text')
-        .attr("x",225)
+        .attr("x",widthLeg / 2 + 25)
         .attr("y",15)
         .text("Déchets collectés");
 
@@ -448,23 +451,24 @@
         .attr("id","tooltipPays");
 
     // Définition de la taille
-    var widthPays = 900,
-        heightPays = 800;
+    var widthPays = 600,
+        heightPays = 500;
 
     //On définit les labels
     var anneeY = ["2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018"];
     anneeY.sort();
 
+    //Création des labels pour l'axe y
     let labelX = [
-        "",
-        "Gros appareils ménagers", //EE_LHA
-        "Petits appareils ménagers", //EE_SHA
-        "Equipements informatiques et de télécommunications", //EE_ITT
-        "Matériel grand public", //EE_CPV_CON
-        "Jouets, équipements de loisirs et de sport", //EE_TLS
-        "Total", //TOTAL
-        " ",
-    ];
+            "",
+            "EE_LHA", //Gros appareils ménagers
+            "EE_SHA", //Petits appareils ménagers
+            "EE_ITT", //Equipements informatiques et de télécommunications
+            "EE_CPV_CON", //Matériel grand public
+            "EE_TLS", //Jouets, équipements de loisirs et de sport
+            "TOTAL", //TOTAL
+            " ",
+        ];
 
     var svgPays = d3
         .select("#visuPays")
@@ -482,7 +486,7 @@
     var yscale = d3
         .scalePoint()
         .domain(anneeY)
-        .range([heightPays / 2, 0]);
+        .range([heightPays - 100, 0]);
 
     var x_axis = d3.axisBottom(xscale);
     x_axis.tickSize(-heightPays);
@@ -493,7 +497,7 @@
     svgPays.append("g").attr("transform", "translate(50, 10)").call(y_axis);
     svgPays.selectAll(".tick:not(:first-of-type) line").attr("stroke", "black").attr("stroke-dasharray", "2,2");
 
-   var xAxisTranslate = heightPays / 2 + 10;
+   var xAxisTranslate = heightPays - 100 + 10;
 
     svgPays
         .append("g")
@@ -524,31 +528,8 @@
         d3.csv("https://ev07.github.io/e-waste.dataviz/data/cleaned_data.csv").then(function (csvdata) {
             for (var i = 0; i < csvdata.length; i++) {
                 if(csvdata[i].countryID == paysActuel && csvdata[i].unit == "KG_HAB" && ( csvdata[i].wst_oper == "COL" || csvdata[i].wst_oper == "MKT")){
-                    var valX = "";
+                    var valX = csvdata[i].waste;
                     var op = "";
-                    switch (csvdata[i].waste) { //On vérifie le type du déchet pour l'afficher au bon endroit
-                        case 'EE_LHA':
-                            valX = "Gros appareils ménagers";
-                            break;
-                        case 'EE_SHA':
-                            valX = "Petits appareils ménagers";
-                            break;
-                        case 'EE_ITT':
-                            valX = "Equipements informatiques et de télécommunications";
-                            break;
-                        case 'EE_CPV_CON':
-                            valX = "Matériel grand public";
-                            break;
-                        case 'EE_TLS':
-                            valX = "Jouets, équipements de loisirs et de sport";
-                            break;
-                        case 'TOTAL':
-                            valX = "Total";
-                            break;
-                        default:
-                            console.log(`Problème avec la catégorie de déchet`);
-                        }
-
                     if(csvdata[i].wst_oper == "MKT"){ //Déchet produit à gauche
                         op = "-";
                     } else if (csvdata[i].wst_oper == "COL"){ // Déchet collecté à droite
@@ -781,8 +762,8 @@
     var gTime = d3
         .select('div#slider-time')
         .append('svg')
-        .attr('width', 900)
-        .attr('height', 100)
+        .attr('width', 550)
+        .attr('height', 80)
         .append('g')
         .attr('transform', 'translate(30,30)');
 
@@ -795,21 +776,9 @@
         .attr("class", "hidden tooltip")
         .attr("id","tooltipPays");
 
-    //Création des labels pour l'axe y
-    let labelShort = [
-            "",
-            "EE_LHA", //EE_LHA
-            "EE_SHA", //EE_SHA
-            "EE_ITT", //EE_ITT
-            "EE_CPV_CON", //EE_CPV_CON
-            "EE_TLS", //EE_TLS
-            "TOTAL", //TOTAL
-            " ",
-        ];
-
     //Définition de la taille
-    heightPS = 600;
-    widthPS = 900;
+    heightPS = 310;
+    widthPS = 550;
 
     var svgPaysSimple = d3
             .select("#visuPaysSimple")
@@ -897,8 +866,8 @@
                 .range([0, widthPS - 100]);
 
             var ysca = d3.scalePoint()
-                    .domain(labelShort)
-                    .range([heightPS/2, 0]);
+                    .domain(labelX)
+                    .range([heightPS - 60, 0]);
 
             var x_ax = d3.axisBottom()
                     .scale(xsca);
@@ -910,7 +879,7 @@
                 .attr("transform", "translate(50, 10)")
                 .call(y_ax);
 
-            var xAxisTrans = heightPS/2 + 10;
+            var xAxisTrans = heightPS - 60 + 10;
 
             svgPaysSimple.append("g")
                         .attr("transform", "translate(50, " + xAxisTrans  +")")
@@ -920,7 +889,7 @@
               .attr("class", "x label")
               .attr("text-anchor", "end")
               .attr("x", widthPS / 2 + 100)
-              .attr("y", heightPS - 250)
+              .attr("y", heightPS - 10)
               .text("Quantité de déchets produits en kg/hab");
 
             //Dessin des cercles et des lignes
@@ -934,16 +903,16 @@
                     .on("mousemove", function (event, d) {
                         // on recupere la position de la souris
                         var mousePosition = d3.pointer(event, this);
-                        //var svgPos = getNodePos(svgPaysSimple)
+                        var svgPos = getNodePos(d3.select("#svgPaysSimple").node())
                         // on affiche le toolip
                         tooltipPaysSimple
                             .classed("hidden", false)
                             .attr(
                             "style",
                             "left:" +
-                                (mousePosition[0] + 15) +
+                                (svgPos.x + mousePosition[0] + 15) +
                                 "px; top:" +
-                                (mousePosition[1] - 35) +
+                                (svgPos.y + mousePosition[1] - 35) +
                                 "px"
                             )
                             .html(dataPays[key] + " kg/hab produit");
@@ -959,8 +928,8 @@
 
 
     /* Initialisation des variables de l'histogramme */
-    const margin_hist = {top: 20, right: 20, bottom: 90, left: 120},
-        width_hist = 800 - margin_hist.left - margin_hist.right,
+    const margin_hist = {top: 20, right: 20, bottom: 90, left: 60},//left : 120 avant
+        width_hist = 550 - margin_hist.left - margin_hist.right, //800 avant
         height_hist = 310 - margin_hist.top - margin_hist.bottom;
         
         
@@ -969,7 +938,7 @@
 
 
             function MakeHist(){
-                d3.csv("data/annexe.csv").then(function (csvdata) {
+                d3.csv("https://ev07.github.io/e-waste.dataviz/data/annexe.csv").then(function (csvdata) {
                     /* Initialisation des variables pour les data */
                     var dict = {};
                     var labelYear = [];
