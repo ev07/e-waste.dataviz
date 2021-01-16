@@ -95,6 +95,7 @@
         <div id="slider" style="text-align: center;">
             <h4>Choix de l'année</h4>
             <div><div id="slider-time"></div></div>
+            <input id="anneeCourante" type="hidden" value="2005">
         </div>
         <div class="wrapper">
         <div id="visuEurope">
@@ -183,14 +184,95 @@
     var year = "2017";
     var unit = "KG_HAB";
 
+    //Code pour le slider
+    var sliderTime = d3
+        .sliderHorizontal()
+        .min(d3.min(anneeY))
+        .max(d3.max(anneeY))
+        .step(1)
+        .width(500)
+        .tickValues(anneeY)
+        .tickFormat(function(n) {return n})
+        .default(d3.min(anneeY))
+        .on('onchange', val => {
+            d3.select("#anneeCourante").attr("value",val);
+            updatedisplayvalue();
+            //update color scale
+            color.domain([0,maxdisplayvalue()]);
+            //update map color
+            for (var i = 0; i < jsondata.features.length; i++) {
+                polyprincipaux.filter(function (d) {
+                    return 0==0;
+                })
+                .style("fill", getfillingmap);
+            }
+            graphPays(val);
+        });
+
+    var gTime = d3
+        .select('div#slider-time')
+        .append('svg')
+        .attr('width', 550)
+        .attr('height', 80)
+        .append('g')
+        .attr('transform', 'translate(30,30)');
+
+    gTime.call(sliderTime);
 
     // fonction qui modifie la valeur de mydisplayvalue avec la valeur en cours pour chaque pays
     function updatedisplayvalue() {
+        var currentYear = d3.select("#anneeCourante").property("value");
         for (var i = 0; i < jsondata.features.length; i++) {
             var countryID = jsondata.features[i].properties.wb_a2;
             for (var j = 0; j < csvdata.length; j++) {
                 if (csvdata[j].waste == waste && csvdata[j].wst_oper == wst_oper && csvdata[j].countryID == countryID) {
-                    jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2017;
+                   // jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2017;
+                    switch (String(currentYear)) { //On vérifie l'année actuellement selectionnée
+                        case '2005':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2005;
+                            break;
+                        case '2006':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2006;
+                            break;
+                        case '2007':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2007;
+                            break;
+                        case '2008':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2008;
+                            break;
+                        case '2009':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2009;
+                            break;
+                        case '2010':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2010;
+                            break;
+                        case '2011':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2011;
+                            break;
+                        case '2012':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2012;
+                            break;
+                        case '2013':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2013;
+                            break;
+                        case '2014':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2014;
+                            break;
+                        case '2015':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2015;
+                            break;
+                        case '2016':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2016;
+                            break;
+                        case '2017':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2017;
+                            break;
+                        case '2018':
+                            jsondata.features[i].properties.mydisplayvalue = csvdata[j].y2018;
+                            break;
+                        default:
+                            console.log(`Problème avec l'année'`);
+                    }
                 }
             }
         }
@@ -202,6 +284,7 @@
         for (var i = 0; i < jsondata.features.length; i++) {
             curr=Math.max(curr,jsondata.features[i].properties.mydisplayvalue);
         }
+        console.log(curr);
         return curr;
     }
 
@@ -359,6 +442,12 @@
             updatedisplayvalue();
 			//update color scale
             color.domain([0,maxdisplayvalue()]);
+            for (var i = 0; i < jsondata.features.length; i++) {
+                polyprincipaux.filter(function (d) {
+                    return 0==0;
+                })
+                .style("fill", getfillingmap);
+            }
             d3.select("#chart").select("svg").remove();
             MakeHist()
         });
@@ -704,30 +793,6 @@
     }
 
     // Deuxième visualisation pour le pays
-    //Code pour le slider
-    var sliderTime = d3
-        .sliderHorizontal()
-        .min(d3.min(anneeY))
-        .max(d3.max(anneeY))
-        .step(1)
-        .width(500)
-        .tickValues(anneeY)
-        .tickFormat(function(n) {return n})
-        .default(d3.min(anneeY))
-        .on('onchange', val => {
-            graphPays(val);
-        });
-
-    var gTime = d3
-        .select('div#slider-time')
-        .append('svg')
-        .attr('width', 550)
-        .attr('height', 80)
-        .append('g')
-        .attr('transform', 'translate(30,30)');
-
-    gTime.call(sliderTime);
-
     // Création d'un tooltip
     var tooltipPaysSimple = d3
         .select("#visuPaysSimple")
