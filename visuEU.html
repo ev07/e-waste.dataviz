@@ -368,7 +368,8 @@
           changeTitleName(longname);
           changeDataCountry(name);
           d3.select("#namePays").attr("value",name);
-          sliderTime.value("2005");
+          var currentYear = d3.select("#anneeCourante").property("value");
+          graphPays(currentYear);
         })
         //tooltip modif
         .on('mousemove', function(event, d) {
